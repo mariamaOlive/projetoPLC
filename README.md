@@ -1,10 +1,12 @@
 #Mini interpretador JS
 
+Ver aqruivo 'consideracoes.txt' para algumas explicações
+
 ## Funções
 
 ###def:
 function mult(p1, p2) {
-    return p1 * p2;              // The function returns the product of p1 and p2
+    return p1 * p2;
 }
 
 ###chamada:
@@ -47,7 +49,7 @@ funtion foo() {
 
 for (i = 0; i < 10; i++) {
     if (i === 3) { break; }
-    text += "The number is " + i + "<br>";
+    text += "The number is " + i;
 }
 
 ## if then else

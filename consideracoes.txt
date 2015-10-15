@@ -1,0 +1,58 @@
+Para listas:
+> precisaremos avacalhar um pouquinho para não ter que refazer o avaliador sintático (o que isso significa?)
+
+Mexeremos na evalStmt (eval statement)
+
+> função principal
+onde mexeremos para adicionar as funcionalidades
+
+
+Notar - o parser sabe o que é cada tipo -> IfSingleStatement -> colocar depois no evalStmt
+
+notar que existe uma função para avaliar uma expressão
+
+Talvez tenha que se preocupar com o o arquivo de tipos de dados antes da 
+
+** case serve para casamentro de padrão em qualquer lugar  **
+
+if/ else -> é um bloco -> chamar evalStmt ->>> Precisa definir um casamento de padrão de evalStmt para BlockStatement
+
+a << b
+
+==
+
+do 
+ a
+ b
+
+lembrar que tem que casar um padrão para o caso de erros
+
+começar por:
+   > variáveis locais, globais e funções
+
+
+sobre a função length
+* seria como uma função de biblioteca na linguagem
+
+notar:
+ environment é do tipo StatetT
+ valor do comando é passado "entrelinhas"
+
+notar que não só vamos apenas adicionar. Vamos ter que alterar a estrutura de maneira mais abrangente -> exemplo: variáveis globais "esse cara vai precisar ser alterado" (acho que ele tava se fererindo a evalExpr)
+
+notar na linha 106:
+ > função insert é da biblioteca padrão (de map) -> insert var val s == inserir o valor var com valor val no mapeamento s (s é o estado)
+
+
+Passo a passo:
+1. Criar primeiramento o código js
+2. Ver o erro no parser e obter os tipos
+3. Altera o interpretador para implementar o comportamento
+
+comparação de igualçdade só por valor e já está implementado (=== não precisa)
+
+** o pasrser sabe lidar com numeros negativos -> o interpretador não -> corrigir
+
+OBSERVAR na especificação:
+
+Com base nas ideias utilizadas na implementação desse interpretador, estenda esse interpretador para implementar algumas funcionalidades adicionais desse subconjunto imperativo da linguagem Javascript. Nos casos em que o comportamento de Javascript é errático (produziria um valor estranho, por exemplo, o resultado de multiplicar um número por um String), você tem liberdade para definir como seu interpretador deve se comportar. 
