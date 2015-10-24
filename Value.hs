@@ -6,6 +6,7 @@ data Value = Bool Bool
     | Var String
     | Error String
     | Nil
+    |Native [Value]
 
 --
 -- Pretty Printer

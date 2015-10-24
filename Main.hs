@@ -75,10 +75,61 @@ evalStmt env (IfStmt cond trueblock falseblock) = do
         (Error _) -> return $ Error "Error"
         (_) -> return $ Error "this is not a valid stmt"
 
+-- ForStatent
+
+evalStmt env (ForStmt i expr iExpr cmd)= do
+    v1 <- initFor env i
+    v2 <- evalExprMaybe env expr 
+    case v2 of 
+        (Bool True) -> do
+            v3<- evalStmt env cmd
+            v4<-evalExprMaybe env iExpr 
+            evalStmt env (ForStmt i expr iExpr cmd)          
+        (Bool False)-> return Nil
+        (Error _) -> return $ Error "Error"
+        (_) -> return $ Error "this is not a valid stmt"
+
+--Initializing ForInit --!ERRor not treated!
+initFor env  i = do 
+ case i of
+        (NoInit) -> return Nil
+
+        (VarInit var) -> evalInit env var  
+
+        (ExprInit expr) -> evalExpr env expr
+
+        (_) -> return $ Error "problems Initializing var"
+
+evalInit env []= return Nil
+evalInit env (x:xs)=
+    varDecl env x >> evalInit env xs 
+
+evalExprMaybe env expr=
+    case expr of
+        Nothing -> return (Bool True) --StateTrasformer Value
+
+        (Just expr) -> evalExpr env expr --StateTrasformer Value
+
+{-forSeq env cmd iExpr = do 
+   v1<- evalStmt env cmd
+   v2<- evalExprMaybe env iExpr 
+   evalStmt env (ForStmt i expr iExpr cmd)
+-}
+{-evalExprFor env v2 cmd = do
+    case v2 of
+        (Bool b) -> if b then evalStmt env cmd else return Nil
+        (Error _) -> return $ Error "Error"
+        (_) -> return $ Error "this is not a valid stmt"
+-}
+
 {-evalStmt env (BlockStmt []) = return Nil 
 evalStmt env (BlockStmt (a:as)) = do 
     evalStmt env a
     evalStmt env (BlockStmt as)
+-}
+{-evalStmt env (FunctionStmt nome (arg:argx) (cmd:cmdx))= 
+    functionDecl env 
+        e <-
 -}
 
 -- Do not touch this one :)
@@ -140,6 +191,11 @@ varDecl env (VarDecl (Id id) maybeExpr) = do
         (Just expr) -> do
             val <- evalExpr env expr
             setVar id val
+
+--Function declaration
+{-functionDecl:: StateT -> Stamentment -> StateTransformer Value
+functionDecl env stmt = evalStmt env stmt
+-}
 
 setVar :: String -> Value -> StateTransformer Value
 setVar var val = ST $ \s -> (val, insert var val s)

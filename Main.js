@@ -1,8 +1,11 @@
-var x = 5, y = 11;
-x + y;
+/*var x = 5, y = 11, b;
+//b=x + y;
+*/
+//var x = 5, y = 11;
 
-if(x<2 && y>10){
-	x=5;
-}else{
-	y=2;
+
+
+for (var i=1; i < 10; i=i+1) {
+   var j=100;
+   	j=j+i;
 }

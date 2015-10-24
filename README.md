@@ -39,11 +39,11 @@ funtion foo() {
    carName = "Uno";
 }
 
-## Comentários
+## Comentários  -- Falar com o monitor, pois aparentemente já está implementado
 
 //
 
-/*   */
+/*   */ 
 
 ## for + break
 
@@ -52,7 +52,7 @@ for (i = 0; i < 10; i++) {
     text += "The number is " + i;
 }
 
-## if then else
+## if then else - DONE
 
 if (hour < 18) {
     greeting = "Good day";
