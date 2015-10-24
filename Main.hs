@@ -27,12 +27,30 @@ evalExpr env (AssignExpr OpAssign (LVar var) expr) = do
             e <- evalExpr env expr
             setVar var e
 
+-- ADICIONANDO O MENOS
+evalExpr env (PrefixExpr PrefixMinus expr) = do
+    (Int val) <- evalExpr env expr --PRECISA CHECAR SE RETORNA UM ERRO?
+    return $ Int (-val)
+
+
 evalStmt :: StateT -> Statement -> StateTransformer Value
 evalStmt env EmptyStmt = return Nil
 evalStmt env (VarDeclStmt []) = return Nil
 evalStmt env (VarDeclStmt (decl:ds)) =
     varDecl env decl >> evalStmt env (VarDeclStmt ds)
 evalStmt env (ExprStmt expr) = evalExpr env expr
+
+-- ADICIONANDO O IF THEN ELSE
+evalStmt env (IfStmt cond trueblock falseblock) = do
+	(Bool v1) <- evalExpr env cond -- FALTA CHECAR O ERRO
+	if v1 then evalStmt env trueblock else evalStmt env falseblock
+
+evalStmt env (BlockStmt []) = return Nil 
+evalStmt env (BlockStmt (a:as)) = do 
+	evalStmt env a
+	evalStmt env (as)
+
+
 
 -- Do not touch this one :)
 evaluate :: StateT -> [Statement] -> StateTransformer Value

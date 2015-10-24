@@ -1,0 +1,1 @@
+if (10 > 11) { var a = 10; var c = 30; } else { var b = 20;  }
