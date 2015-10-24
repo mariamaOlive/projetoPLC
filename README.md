@@ -2,7 +2,9 @@
 
 Ver aqruivo 'consideracoes.txt' para algumas explicações
 
-## Funções
+## Menos (Operador unário de -) [FEITO]
+
+## Funções [CHECAR NA POSSIBILIDADE DE SEPARAR A MEMÓRIA]
 
 ###def:
 function mult(p1, p2) {
@@ -39,7 +41,7 @@ funtion foo() {
    carName = "Uno";
 }
 
-## Comentários
+## Comentários [CHECAR COM O MONITOR]
 
 //
 
@@ -52,7 +54,12 @@ for (i = 0; i < 10; i++) {
     text += "The number is " + i;
 }
 
-## if then else
+## if the [FEITO]
+if (hour < 18) {
+    greeting = "Good day";
+}
+
+## if then else [FEITO]
 
 if (hour < 18) {
     greeting = "Good day";
