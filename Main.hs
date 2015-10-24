@@ -54,7 +54,7 @@ evalStmt env (ExprStmt expr) = evalExpr env expr
 --BlockStatement
 evalStmt env (BlockStmt (stmt:sx))=
     evalStmt env stmt >> evalStmt env (BlockStmt sx)  
-evalStmt env (BlockStmt []) = evalStmt env EmptyStmt
+evalStmt env (BlockStmt []) = return Nil
 
 --IfSingleStatement
 evalStmt env (IfSingleStmt expr cmd) = do 
@@ -66,7 +66,20 @@ evalStmt env (IfSingleStmt expr cmd) = do
         (Error _) -> return $ Error "Error"
         (_) -> return $ Error "this is not a valid stmt"
 
+-- IfStatement - ADICIONANDO O IF THEN ELSE 
+evalStmt env (IfStmt cond trueblock falseblock) = do
+    v <- evalExpr env cond
+    case v of
+        (Bool v1) -> if v1 then evalStmt env trueblock else evalStmt env falseblock
+        --Case Error
+        (Error _) -> return $ Error "Error"
+        (_) -> return $ Error "this is not a valid stmt"
 
+{-evalStmt env (BlockStmt []) = return Nil 
+evalStmt env (BlockStmt (a:as)) = do 
+    evalStmt env a
+    evalStmt env (BlockStmt as)
+-}
 
 -- Do not touch this one :)
 evaluate :: StateT -> [Statement] -> StateTransformer Value
