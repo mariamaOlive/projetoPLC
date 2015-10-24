@@ -11,6 +11,7 @@ import Value
 --
 
 evalExpr :: StateT -> Expression -> StateTransformer Value
+--Implemented by Paulo
 evalExpr env (VarRef (Id id)) = stateLookup env id
 
 evalExpr env (IntLit int) = return $ Int int
@@ -30,12 +31,15 @@ evalExpr env (AssignExpr OpAssign (LVar var) expr) = do
             e <- evalExpr env expr
             setVar var e
 
-evalExpr env (PrefixExpr op expr) = do
+--PrefixExpression
+{-evalExpr env (PrefixExpr op expr) = do
     op1 <- 
-
+-}
 
 
 evalStmt :: StateT -> Statement -> StateTransformer Value
+
+--Already implemented by Paulo
 evalStmt env EmptyStmt = return Nil
 
 evalStmt env (VarDeclStmt []) = return Nil
@@ -45,10 +49,14 @@ evalStmt env (VarDeclStmt (decl:ds)) =
 
 evalStmt env (ExprStmt expr) = evalExpr env expr
 
+
+--Our implementation
+--BlockStatement
 evalStmt env (BlockStmt (stmt:sx))=
     evalStmt env stmt >> evalStmt env (BlockStmt sx)  
 evalStmt env (BlockStmt []) = evalStmt env EmptyStmt
 
+--IfSingleStatement
 evalStmt env (IfSingleStmt expr cmd) = do 
     v<-evalExpr env expr
     case v of 
