@@ -12,11 +12,14 @@ import Value
 
 evalExpr :: StateT -> Expression -> StateTransformer Value
 evalExpr env (VarRef (Id id)) = stateLookup env id
+
 evalExpr env (IntLit int) = return $ Int int
+
 evalExpr env (InfixExpr op expr1 expr2) = do
     v1 <- evalExpr env expr1
     v2 <- evalExpr env expr2
     infixOp env op v1 v2
+
 evalExpr env (AssignExpr OpAssign (LVar var) expr) = do
     v <- stateLookup env var
     case v of
@@ -27,12 +30,35 @@ evalExpr env (AssignExpr OpAssign (LVar var) expr) = do
             e <- evalExpr env expr
             setVar var e
 
+evalExpr env (PrefixExpr op expr) = do
+    op1 <- 
+
+
+
 evalStmt :: StateT -> Statement -> StateTransformer Value
 evalStmt env EmptyStmt = return Nil
+
 evalStmt env (VarDeclStmt []) = return Nil
+
 evalStmt env (VarDeclStmt (decl:ds)) =
     varDecl env decl >> evalStmt env (VarDeclStmt ds)
+
 evalStmt env (ExprStmt expr) = evalExpr env expr
+
+evalStmt env (BlockStmt (stmt:sx))=
+    evalStmt env stmt >> evalStmt env (BlockStmt sx)  
+evalStmt env (BlockStmt []) = evalStmt env EmptyStmt
+
+evalStmt env (IfSingleStmt expr cmd) = do 
+    v<-evalExpr env expr
+    case v of 
+        --Case v is a Boolean
+        (Bool b) -> if b then evalStmt env cmd else return Nil
+        --Case v is an Error
+        (Error _) -> return $ Error "Error"
+        (_) -> return $ Error "this is not a valid stmt"
+
+
 
 -- Do not touch this one :)
 evaluate :: StateT -> [Statement] -> StateTransformer Value
