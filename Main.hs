@@ -75,6 +75,10 @@ evalStmt env (IfStmt cond trueblock falseblock) = do
         (Error _) -> return $ Error "Error"
         (_) -> return $ Error "this is not a valid stmt"
 
+evalStmt env (FunctionStmt (Id name) arg cmd)= do
+    newF <- return (Func arg cmd)
+    setVar name newF
+
 -- ForStatent
 evalStmt env (ForStmt i expr iExpr cmd)= do
     v1 <- initFor env i 
@@ -130,10 +134,8 @@ evalStmt env (BlockStmt (a:as)) = do
     evalStmt env a
     evalStmt env (BlockStmt as)
 -}
-{-evalStmt env (FunctionStmt nome (arg:argx) (cmd:cmdx))= 
-    functionDecl env 
-        e <-
--}
+
+
 
 -- Do not touch this one :)
 evaluate :: StateT -> [Statement] -> StateTransformer Value

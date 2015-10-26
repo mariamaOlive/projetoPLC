@@ -1,4 +1,5 @@
 module Value (Value (..)) where
+import Language.ECMAScript3.Syntax
 
 data Value = Bool Bool
     | Int Int
@@ -6,7 +7,7 @@ data Value = Bool Bool
     | Var String
     | Error String
     | Nil
-    |Native [Value]
+    | Func [Id] [Statement]
 
 --
 -- Pretty Printer

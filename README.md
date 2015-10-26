@@ -47,7 +47,7 @@ funtion foo() {
 
 /*   */ 
 
-## for + break
+## for [FEITO] + break 
 
 for (i = 0; i < 10; i++) {
     if (i === 3) { break; }
@@ -68,6 +68,8 @@ if (hour < 18) {
 } else {
     greeting = "Good evening";
 }
+
+## i++; ++i ; i--; --i
 
 -- checar comportamento do parser com só if e if the else
 
