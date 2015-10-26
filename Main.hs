@@ -76,34 +76,37 @@ evalStmt env (IfStmt cond trueblock falseblock) = do
         (_) -> return $ Error "this is not a valid stmt"
 
 -- ForStatent
-
 evalStmt env (ForStmt i expr iExpr cmd)= do
-    v1 <- initFor env i
+    v1 <- initFor env i 
     v2 <- evalExprMaybe env expr 
     case v2 of 
         (Bool True) -> do
-            v3<- evalStmt env cmd
-            v4<-evalExprMaybe env iExpr 
-            evalStmt env (ForStmt i expr iExpr cmd)          
+            v3 <-evalStmt env cmd
+            v4 <-evalExprMaybe env iExpr 
+            evalStmt env (ForStmt NoInit expr iExpr cmd)          
         (Bool False)-> return Nil
         (Error _) -> return $ Error "Error"
         (_) -> return $ Error "this is not a valid stmt"
 
---Initializing ForInit --!ERRor not treated!
+
+--Initializing ForInit --!ERRor test it!
+initFor:: StateT -> ForInit -> StateTransformer Value
 initFor env  i = do 
  case i of
-        (NoInit) -> return Nil
+        (NoInit) -> return Nil --StateTransformer Value
 
-        (VarInit var) -> evalInit env var  
+        (VarInit var) -> evalInit env var  --StateTransformer Value
 
-        (ExprInit expr) -> evalExpr env expr
+        (ExprInit expr) -> evalExpr env expr --StateTransformer Value
 
-        (_) -> return $ Error "problems Initializing var"
+        (_) -> return $ Error "problems Initializing var" --StateTransformer Value
 
+evalInit:: StateT -> [VarDecl] -> StateTransformer Value
 evalInit env []= return Nil
 evalInit env (x:xs)=
     varDecl env x >> evalInit env xs 
 
+evalExprMaybe:: StateT -> Maybe Expression -> StateTransformer Value
 evalExprMaybe env expr=
     case expr of
         Nothing -> return (Bool True) --StateTrasformer Value
@@ -213,6 +216,8 @@ instance Monad StateTransformer where
         let (v, newS) = m s
             (ST resF) = f v
         in resF newS
+
+
 
 instance Functor StateTransformer where
     fmap = liftM
