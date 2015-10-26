@@ -1,11 +1,8 @@
-/*var x = 5, y = 11, b;
-//b=x + y;
-*/
-//var x = 5, y = 11;
+var x = 5, y = 11, b;
+b=x + y;
 
-
-
-for (var i=1; i < 10; i=i+1) {
-   var j=100;
-   	j=j+i;
+function soma(a,b){
+	var c=a-b;
 }
+
+soma(10,20);

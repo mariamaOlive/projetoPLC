@@ -78,3 +78,6 @@ N/A
 
 ## Funções head, tail e concat
 N/A
+
+##Perguntas para o monitor
+-Como devemos imprimir a função quando se imprime tudo que está no environment

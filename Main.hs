@@ -31,6 +31,19 @@ evalExpr env (AssignExpr OpAssign (LVar var) expr) = do
             e <- evalExpr env expr
             setVar var e
 
+--FunctionExpression
+evalExpr env (CallExpr expr values)= do 
+    (Func args cmds)<- evalExpr env expr
+    initVarFunc env args values
+    evalStmt env (BlockStmt cmds)
+
+--Initializing several var for FunctionExpression
+initVarFunc env [] [] = return Nil
+initVarFunc env ((Id ids):idsx) (v:vx)= do
+    value<- evalExpr env v
+    setVar ids value >> initVarFunc env idsx vx
+
+
 --PrefixExpression
 {-evalExpr env (PrefixExpr op expr) = do
     op1 <- 
@@ -75,6 +88,7 @@ evalStmt env (IfStmt cond trueblock falseblock) = do
         (Error _) -> return $ Error "Error"
         (_) -> return $ Error "this is not a valid stmt"
 
+--FunctionStatement
 evalStmt env (FunctionStmt (Id name) arg cmd)= do
     newF <- return (Func arg cmd)
     setVar name newF

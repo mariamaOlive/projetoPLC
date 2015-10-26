@@ -21,7 +21,7 @@ instance Show Value where
   show (Var name) = name
   show (Error str) = "Error: " ++ str
   show Nil = ""
-  
+  show (Func args cmds) = ""   
 -- This function could be replaced by (unwords.map show). The unwords
 -- function takes a list of String values and uses them to build a 
 -- single String where the words are separated by spaces.
