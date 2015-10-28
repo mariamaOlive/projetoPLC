@@ -61,6 +61,7 @@ updateState oldEnv newEnv =
 --Initializing several var for FunctionExpression
 --TODO: ao tratar de variáveis locais e globais estamos mandando listas com tamanhos diferentes!!!
 --TODO: Antes: initVarFunc env [] [] = return Nil
+--TODO: Quando descobrircomos como resolver o problema, adicionar a linha de cima novamente, para testar corretude
 initVarFunc env _ [] = return Nil
 initVarFunc env [] _ = return Nil
 initVarFunc env ((Id ids):idsx) (v:vx)= do
