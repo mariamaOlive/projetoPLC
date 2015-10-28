@@ -43,11 +43,11 @@ evalExpr env (CallExpr expr values)= ST (\s->
     in (v2, newS4))
 
 
-updateState oldEnv newEnv = 
+updateState oldEnv newEnv =
     let local = difference newEnv oldEnv
         globalNotUpdated = difference newEnv local
         globalUpdated = union globalNotUpdated oldEnv
-    in globalUpdated    
+    in globalUpdated
 
 
 
@@ -59,7 +59,8 @@ updateState oldEnv newEnv =
     evalStmt env (BlockStmt cmds)-}
 
 --Initializing several var for FunctionExpression
-initVarFunc env [] [] = return Nil
+initVarFunc env _ [] = return Nil
+initVarFunc env [] _ = return Nil
 initVarFunc env ((Id ids):idsx) (v:vx)= do
     value<- evalExpr env v
     setVar ids value >> initVarFunc env idsx vx
@@ -67,7 +68,7 @@ initVarFunc env ((Id ids):idsx) (v:vx)= do
 
 --PrefixExpression
 {-evalExpr env (PrefixExpr op expr) = do
-    op1 <- 
+    op1 <-
 -}
 
 
@@ -87,20 +88,20 @@ evalStmt env (ExprStmt expr) = evalExpr env expr
 --Our implementation
 --BlockStatement
 evalStmt env (BlockStmt (stmt:sx))=
-    evalStmt env stmt >> evalStmt env (BlockStmt sx)  
+    evalStmt env stmt >> evalStmt env (BlockStmt sx)
 evalStmt env (BlockStmt []) = return Nil
 
 --IfSingleStatement
-evalStmt env (IfSingleStmt expr cmd) = do 
+evalStmt env (IfSingleStmt expr cmd) = do
     v<-evalExpr env expr
-    case v of 
+    case v of
         --Case v is a Boolean
         (Bool b) -> if b then evalStmt env cmd else return Nil
         --Case v is an Error
         (Error _) -> return $ Error "Error"
         (_) -> return $ Error "this is not a valid stmt"
 
--- IfStatement - ADICIONANDO O IF THEN ELSE 
+-- IfStatement - ADICIONANDO O IF THEN ELSE
 evalStmt env (IfStmt cond trueblock falseblock) = do
     v <- evalExpr env cond
     case v of
@@ -116,13 +117,13 @@ evalStmt env (FunctionStmt (Id name) arg cmd)= do
 
 -- ForStatent
 evalStmt env (ForStmt i expr iExpr cmd)= do
-    v1 <- initFor env i 
-    v2 <- evalExprMaybe env expr 
-    case v2 of 
+    v1 <- initFor env i
+    v2 <- evalExprMaybe env expr
+    case v2 of
         (Bool True) -> do
             v3 <-evalStmt env cmd
-            v4 <-evalExprMaybe env iExpr 
-            evalStmt env (ForStmt NoInit expr iExpr cmd)          
+            v4 <-evalExprMaybe env iExpr
+            evalStmt env (ForStmt NoInit expr iExpr cmd)
         (Bool False)-> return Nil
         (Error _) -> return $ Error "Error"
         (_) -> return $ Error "this is not a valid stmt"
@@ -130,7 +131,7 @@ evalStmt env (ForStmt i expr iExpr cmd)= do
 
 --Initializing ForInit --!ERRor test it!
 initFor:: StateT -> ForInit -> StateTransformer Value
-initFor env  i = do 
+initFor env  i = do
  case i of
         (NoInit) -> return Nil --StateTransformer Value
 
@@ -143,7 +144,7 @@ initFor env  i = do
 evalInit:: StateT -> [VarDecl] -> StateTransformer Value
 evalInit env []= return Nil
 evalInit env (x:xs)=
-    varDecl env x >> evalInit env xs 
+    varDecl env x >> evalInit env xs
 
 evalExprMaybe:: StateT -> Maybe Expression -> StateTransformer Value
 evalExprMaybe env expr=
@@ -152,9 +153,9 @@ evalExprMaybe env expr=
 
         (Just expr) -> evalExpr env expr --StateTrasformer Value
 
-{-forSeq env cmd iExpr = do 
+{-forSeq env cmd iExpr = do
    v1<- evalStmt env cmd
-   v2<- evalExprMaybe env iExpr 
+   v2<- evalExprMaybe env iExpr
    evalStmt env (ForStmt i expr iExpr cmd)
 -}
 {-evalExprFor env v2 cmd = do
@@ -164,8 +165,8 @@ evalExprMaybe env expr=
         (_) -> return $ Error "this is not a valid stmt"
 -}
 
-{-evalStmt env (BlockStmt []) = return Nil 
-evalStmt env (BlockStmt (a:as)) = do 
+{-evalStmt env (BlockStmt []) = return Nil
+evalStmt env (BlockStmt (a:as)) = do
     evalStmt env a
     evalStmt env (BlockStmt as)
 -}
