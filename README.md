@@ -29,7 +29,7 @@ function fib(n) {
     }
 }
 
-## Variaveis Locais
+## Variaveis Locais - FUNCTION E FOR 
 
 var carName = " Volvo";
 
@@ -81,3 +81,4 @@ N/A
 
 ##Perguntas para o monitor
 -Como devemos imprimir a função quando se imprime tudo que está no environment
+-Perguntar sobre listas
