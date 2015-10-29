@@ -15,11 +15,12 @@ for(var i=1; i<10; i=i+1){
 */
 var a = 10;
 
-function soma(a){
+function soma(){
 	a = a + 2;
+	var b = 20;
 }
 
-soma(20);
+soma(20, 20);
 
 
 /*old [(x,5),(y,11),(b,16)]
