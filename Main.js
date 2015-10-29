@@ -1,4 +1,4 @@
-var x = 5, y = 11, b;
+/*var x = 5, y = 11, b;
 var b=x + y;
 b=100;
 
@@ -12,15 +12,15 @@ for(var i=1; i<10; i=i+1){
 	b=i+b;
 	break;
 }
+*/
+var a = 10;
 
-/*function soma(a){
-	var d=3;
-	var b=a;
- 	
+function soma(a){
+	a = a + 2;
 }
 
-soma(10,20);
-*/
+soma(20);
+
 
 /*old [(x,5),(y,11),(b,16)]
 new [(x,5),(y,11),(b,3),(a,1),(c,3),(d,-2)]

@@ -36,7 +36,9 @@ evalExpr env (CallExpr expr values)= ST (\s->
     let (ST f) = evalExpr env expr
         ((Func args cmds), newS) = f s
         (ST g) =initVarFunc env args values
-        (v, newS2) = g newS
+        (v, newS2) = 
+            case v of 
+                ()g newS
         (ST h) = evalStmt env (BlockStmt cmds)
         (v2, newS3) = h newS2
         newS4 = updateState newS newS3
@@ -48,11 +50,7 @@ updateState oldEnv newEnv =
         globalNotUpdated = difference newEnv local
         globalUpdated = union globalNotUpdated oldEnv
     in globalUpdated
-
-
-
-
-
+ 
 
     {-(Func args cmds)<- evalExpr env expr --retorna um ST e temos que pegar os args
     initVarFunc env args values
@@ -62,8 +60,10 @@ updateState oldEnv newEnv =
 --TODO: ao tratar de variáveis locais e globais estamos mandando listas com tamanhos diferentes!!!
 --TODO: Antes: initVarFunc env [] [] = return Nil
 --TODO: Quando descobrircomos como resolver o problema, adicionar a linha de cima novamente, para testar corretude
-initVarFunc env _ [] = return Nil
-initVarFunc env [] _ = return Nil
+--initVarFunc env _ [] = return Nil
+initVarFunc env [] [] = return Nil
+initVarFunc env [] _ = return $ Error "Size of parameters don't match"
+initVarFunc env _ [] = return $ Error "Size of parameters don't match"
 initVarFunc env ((Id ids):idsx) (v:vx)= do
     value<- evalExpr env v
     setVar ids value >> initVarFunc env idsx vx
