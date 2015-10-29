@@ -90,8 +90,11 @@ evalStmt env (ExprStmt expr) = evalExpr env expr
 
 --Our implementation
 --BlockStatement
-evalStmt env (BlockStmt (stmt:sx))=
-    evalStmt env stmt >> evalStmt env (BlockStmt sx)
+evalStmt env (BlockStmt (stmt:sx))= do
+    v<- (evalStmt env stmt)
+    case v of
+        (Bool False) -> return (Bool False)
+        (_) -> evalStmt env (BlockStmt sx)
 evalStmt env (BlockStmt []) = return Nil
 
 --IfSingleStatement
@@ -118,19 +121,27 @@ evalStmt env (FunctionStmt (Id name) arg cmd)= do
     newF <- return (Func arg cmd)
     setVar name newF
 
--- ForStatent
+-- ForStatement
 evalStmt env (ForStmt i expr iExpr cmd)= do
     v1 <- initFor env i
     v2 <- evalExprMaybe env expr
     case v2 of
         (Bool True) -> do
             v3 <-evalStmt env cmd
-            v4 <-evalExprMaybe env iExpr
-            evalStmt env (ForStmt NoInit expr iExpr cmd)
+            case v3 of
+               (Bool False) -> return Nil
+               (_) -> evalExprMaybe env iExpr >> evalStmt env (ForStmt NoInit expr iExpr cmd)
+    --evalExprMaybe env iExpr >>evalStmt env (ForStmt NoInit expr iExpr cmd)
+
         (Bool False)-> return Nil
         (Error _) -> return $ Error "Error"
         (_) -> return $ Error "this is not a valid stmt"
 
+-- BreakStatement
+evalStmt env (BreakStmt i)= do
+    case i of
+        Nothing -> return (Bool False) --Case we want to break the for
+        (Just i) -> return $ Error "Error"
 
 --Initializing ForInit --!ERRor test it!
 initFor:: StateT -> ForInit -> StateTransformer Value

@@ -1,14 +1,26 @@
 var x = 5, y = 11, b;
 var b=x + y;
+b=100;
 
-function soma(a){
+
+for(var i=1; i<10; i=i+1){
+
+	if(i==6){
+		break;
+		i=7;
+	}
+	b=i+b;
+	break;
+}
+
+/*function soma(a){
 	var d=3;
-	b=a;
+	var b=a;
  	
 }
 
 soma(10,20);
-
+*/
 
 /*old [(x,5),(y,11),(b,16)]
 new [(x,5),(y,11),(b,3),(a,1),(c,3),(d,-2)]
