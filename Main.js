@@ -13,14 +13,11 @@ for(var i=1; i<10; i=i+1){
 	break;
 }
 */
-var a = 10;
-
 function soma(){
-	a = a + 2;
-	var b = 20;
+	return 20;
 }
 
-soma(20, 20);
+soma();
 
 
 /*old [(x,5),(y,11),(b,16)]
