@@ -60,9 +60,9 @@ evalExpr env (CallExpr expr values)= ST (\s->
     let (ST f) = evalExpr env expr
         ((Func args cmds), newS) = f s
         (ST g) =initVarFunc env args values
-        (v, newS2) = let 
+        (v, newS2) = let
                     (vx, newSx) = g newS
-                    in case vx of 
+                    in case vx of
                         (Error e) = return $ Error e
                         _ = return (vx, newSx)
         (ST h) = evalStmt env (BlockStmt cmds)
@@ -112,6 +112,12 @@ evalStmt env (VarDeclStmt (decl:ds)) =
     varDecl env decl >> evalStmt env (VarDeclStmt ds)
 
 evalStmt env (ExprStmt expr) = evalExpr env expr
+
+
+evalStmt env (ReturnStmt expr) = do
+    case expr of
+        (Just x) -> evalExpr env x
+        _ -> return $ Nil -- checar se nill está correto
 
 
 --Our implementation
