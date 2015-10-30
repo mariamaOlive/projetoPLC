@@ -79,7 +79,7 @@ if (hour < 18) {
 ## Listas (similares a haskell)
 N/A
 
-## Funções head, tail e concat
+## Funções head, tail e concat e len(feita na própria linguagem ñ em haskell) 
 N/A
 
 ##Perguntas para o monitor
