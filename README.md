@@ -1,6 +1,5 @@
 OBS:
-for com escopo local: falta remover o i da resposta
-quando o breake é usando, por algum motivo não funciona
+quando o breake é usando, por algum motivo o escopo local não funciona dentro do for
 
 #Mini interpretador JS
 
