@@ -82,6 +82,10 @@ N/A
 ## Funções head, tail e concat e len(feita na própria linguagem ñ em haskell) 
 N/A
 
+## Fazer 10 exemplos de programas, ao menos 1 usando quicksort recursivo
+http://rosettacode.org/wiki/Sorting_algorithms/Quicksort
+
+
 ##Perguntas para o monitor
 -Como devemos imprimir a função quando se imprime tudo que está no environment
 -Perguntar sobre listas

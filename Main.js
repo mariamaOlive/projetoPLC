@@ -1,3 +1,7 @@
+function quickSort(lista){
+}g
+
+quickSort([1,3,4,56,3,1]);
 /*function foo(x) {
 	return 10;
 }
@@ -21,7 +25,7 @@ function fib(n) {
 
 var a = fib(16);
 */
-concat [1, 2, 3] [1, 2, 3];
+//concat [1, 2, 3] [1, 2, 3];
 
 
 
