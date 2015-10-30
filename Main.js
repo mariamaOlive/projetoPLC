@@ -1,3 +1,4 @@
+
 /*
 var x = 5, y = 11, b;
 var b=x + y;
@@ -17,11 +18,13 @@ for(var i=1; i<10; i=i+1){
 */
 
 var a = 30;
-var i = 0;
-for(i = 0; i < 10; i=i+1) {
-	var b = 20;
-	var c = 10;
-	a = 3;
+var b=20;
+
+for(var i = 0; i < 10; i=i+1) {
+	a = 3+i;
+	if(i == 3) {
+		break;
+	}
 }
 
 /*old [(x,5),(y,11),(b,16)]

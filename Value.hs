@@ -8,6 +8,8 @@ data Value = Bool Bool
     | Error String
     | Nil
     | Func [Id] [Statement]
+    | Break
+    | Return Value
 
 --
 -- Pretty Printer
@@ -21,7 +23,7 @@ instance Show Value where
   show (Var name) = name
   show (Error str) = "Error: " ++ str
   show Nil = ""
-  show (Func args cmds) = ""   
+  show (Func args cmds) = "func"   
 -- This function could be replaced by (unwords.map show). The unwords
 -- function takes a list of String values and uses them to build a 
 -- single String where the words are separated by spaces.

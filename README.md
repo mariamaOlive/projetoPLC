@@ -86,3 +86,4 @@ N/A
 -Como devemos imprimir a função quando se imprime tudo que está no environment
 -Perguntar sobre listas
 --Duvida sobre parametros de função com tamanhos diferentes quando declarado e chamado
+--Duvida: inicializar ou nao a variavel de escorpo local de mesmo nome que globa (function e for)

@@ -115,7 +115,9 @@ evalStmt env (ExprStmt expr) = evalExpr env expr
 
 evalStmt env (ReturnStmt expr) = do
     case expr of
-        (Just x) -> evalExpr env x
+        (Just x) -> do
+            v <- evalExpr env x
+            return $ Return v
         _ -> return $ Nil -- checar se nill está correto
 
 
@@ -124,7 +126,8 @@ evalStmt env (ReturnStmt expr) = do
 evalStmt env (BlockStmt (stmt:sx))= do
     v<- (evalStmt env stmt)
     case v of
-        (Bool False) -> return (Bool False)
+        (Break) -> return Break
+        (Return x) -> return $ x
         (_) -> evalStmt env (BlockStmt sx)
 evalStmt env (BlockStmt []) = return Nil
 
@@ -163,7 +166,9 @@ evalStmt env (ForStmt i expr iExpr cmd)= ST (\s->
             let (ST f3) = evalStmt env cmd
                 (v3, newS3) = f3 newS2
             in case v3 of
-                   (Bool False) -> (Nil, newS3)
+                   (Break) -> 
+                                    let newSBreak = updateState s newS3 (difference newS1 s) 
+                                    in (Nil, newSBreak)
                    (_) ->
                             let (ST f4) = evalExprMaybe env iExpr
                                 (v4, newS4) = f4 newS3
@@ -178,7 +183,7 @@ evalStmt env (ForStmt i expr iExpr cmd)= ST (\s->
 -- BreakStatement
 evalStmt env (BreakStmt i)= do
     case i of
-        Nothing -> return (Bool False) --Case we want to break the for
+        Nothing -> return Break --Case we want to break the for
         (Just i) -> return $ Error "Error"
 
 --Initializing ForInit --!ERRor test it!
