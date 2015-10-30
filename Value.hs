@@ -10,6 +10,7 @@ data Value = Bool Bool
     | Func [Id] [Statement]
     | Break
     | Return Value
+    | Array [Value]
 
 --
 -- Pretty Printer
@@ -22,8 +23,12 @@ instance Show Value where
   show (String str) = "\"" ++ str ++ "\""
   show (Var name) = name
   show (Error str) = "Error: " ++ str
-  show Nil = ""
-  show (Func args cmds) = "func"   
+  show Nil = "nil"
+  show (Func args cmds) = "func"
+  show Break = "show Break" 
+  show (Return v) = "show Return"
+  show (Array []) = ""
+  show (Array values) = "[" ++ showListContents values ++ "]"   
 -- This function could be replaced by (unwords.map show). The unwords
 -- function takes a list of String values and uses them to build a 
 -- single String where the words are separated by spaces.

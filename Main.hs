@@ -31,6 +31,19 @@ evalExpr env (AssignExpr OpAssign (LVar var) expr) = do
             e <- evalExpr env expr
             setVar var e
 
+
+--PrefixExpression
+evalExpr env (PrefixExpr PrefixMinus expr) = do
+    v <- evalExpr env expr
+    case v of 
+        (Int val) -> return $ Int (-val)
+        _ -> return $ Error "Return value is not valid"
+
+--ArrayLit
+evalExpr env (ArrayLit exprs) = 
+    let newExprs = Prelude.map fst $ Prelude.map (\s -> getResult (evalExpr env s)) exprs
+    in return $ Array newExprs
+
 --FunctionExpression
 evalExpr env (CallExpr expr values)= ST (\s->
     let (ST f) = evalExpr env expr
@@ -39,8 +52,9 @@ evalExpr env (CallExpr expr values)= ST (\s->
         (v, newS2) = g newS
         (ST h) = evalStmt env (BlockStmt cmds)
         (v2, newS3) = h newS2
+        newV2 = extractReturn v2 
         newS4 = updateState newS newS3 (fromList (createMapParams args))
-    in (v2, newS4))
+    in (newV2, newS4))
 
 updateState oldEnv newEnv paramsEnv =
     let local1 = difference newEnv oldEnv
@@ -53,6 +67,9 @@ updateState oldEnv newEnv paramsEnv =
 createMapParams [] = []
 createMapParams ((Id p):ps) = (p, ""): createMapParams ps
 
+
+extractReturn (Return x) = x
+extractReturn v = v
 
 {-
 evalExpr env (CallExpr expr values)= ST (\s->
@@ -118,18 +135,18 @@ evalStmt env (ReturnStmt expr) = do
         (Just x) -> do
             v <- evalExpr env x
             return $ Return v
-        _ -> return $ Nil -- checar se nill está correto
+        Nothing -> return $ Return Nil -- checar se nill está correto
 
 
 --Our implementation
 --BlockStatement
 evalStmt env (BlockStmt (stmt:sx))= do
-    v<- (evalStmt env stmt)
+    v<- trace ("avaliei") $ (evalStmt env stmt)
     case v of
-        (Break) -> return Break
-        (Return x) -> return $ x
-        (_) -> evalStmt env (BlockStmt sx)
-evalStmt env (BlockStmt []) = return Nil
+        (Break) -> trace ("break") $return Break
+        (Return x) -> trace ("return: " ++ show x) $ return (Return x)
+        (_) -> trace ("(_)" ++ show v) $ evalStmt env (BlockStmt sx)
+evalStmt env (BlockStmt []) = trace ("entrei aqui") $ return Nil
 
 --IfSingleStatement
 evalStmt env (IfSingleStmt expr cmd) = do
@@ -198,9 +215,10 @@ initFor env  i = do
 
         (_) -> return $ Error "problems Initializing var" --StateTransformer Value
 
+
 evalInit:: StateT -> [VarDecl] -> StateTransformer Value
 evalInit env []= return Nil
-evalInit env (x:xs)=
+evalInit env (x:xs) =
     varDecl env x >> evalInit env xs
 
 evalExprMaybe:: StateT -> Maybe Expression -> StateTransformer Value
@@ -266,6 +284,9 @@ infixOp env op v1 (Var x) = do
     case var of
         error@(Error _) -> return error
         val -> infixOp env op v1 val
+
+infixOp env op (Return v) v1 = do
+    trace ("eh uma funcao") $ return $ Error "a"
 
 --
 -- Environment and auxiliary functions
