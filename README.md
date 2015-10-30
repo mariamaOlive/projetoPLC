@@ -1,3 +1,7 @@
+OBS:
+for com escopo local: falta remover o i da resposta
+quando o breake é usando, por algum motivo não funciona
+
 #Mini interpretador JS
 
 Ver aqruivo 'consideracoes.txt' para algumas explicações
@@ -29,7 +33,7 @@ function fib(n) {
     }
 }
 
-## Variaveis Locais - FUNCTION E FOR 
+## Variaveis Locais - FUNCTION E FOR
 
 var carName = " Volvo";
 
@@ -45,7 +49,7 @@ funtion foo() {
 
 //
 
-/*   */ 
+/*   */
 
 ## for [FEITO] + break [FEITO]
 

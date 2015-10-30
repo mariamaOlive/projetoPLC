@@ -39,13 +39,12 @@ evalExpr env (CallExpr expr values)= ST (\s->
         (v, newS2) = g newS
         (ST h) = evalStmt env (BlockStmt cmds)
         (v2, newS3) = h newS2
-        newS4 = updateState newS newS3 args
+        newS4 = updateState newS newS3 (fromList (createMapParams args))
     in (v2, newS4))
 
-updateState oldEnv newEnv params =
-    let lstParams = fromList (createMapParams params)
-        local1 = difference newEnv oldEnv
-        local2 = intersection newEnv lstParams
+updateState oldEnv newEnv paramsEnv =
+    let local1 = difference newEnv oldEnv
+        local2 = intersection newEnv paramsEnv
         local = union local1 local2
         globalNotUpdated = difference newEnv local
         globalUpdated = union globalNotUpdated oldEnv
@@ -153,22 +152,29 @@ evalStmt env (FunctionStmt (Id name) arg cmd)= do
     newF <- return (Func arg cmd)
     setVar name newF
 
--- ForStatement
-evalStmt env (ForStmt i expr iExpr cmd)= do
-    v1 <- initFor env i
-    v2 <- evalExprMaybe env expr
-    case v2 of
-        (Bool True) -> do
-            v3 <-evalStmt env cmd
-            case v3 of
-               (Bool False) -> return Nil
-               (_) -> evalExprMaybe env iExpr >> evalStmt env (ForStmt NoInit expr iExpr cmd)
-    --evalExprMaybe env iExpr >>evalStmt env (ForStmt NoInit expr iExpr cmd)
-
-        (Bool False)-> return Nil
-        (Error _) -> return $ Error "Error"
-        (_) -> return $ Error "this is not a valid stmt"
-
+-- ForStatement [escopo local por algum motivo não está funcionando com o break]
+evalStmt env (ForStmt i expr iExpr cmd)= ST (\s->
+    let (ST f1) = initFor env i
+        (v1, newS1) = f1 s
+        (ST f2) = evalExprMaybe env expr
+        (v2, newS2) = f2 newS1
+    in case v2 of
+        (Bool True) ->
+            let (ST f3) = evalStmt env cmd
+                (v3, newS3) = f3 newS2
+            in case v3 of
+                   (Bool False) -> (Nil, newS3)
+                   (_) ->
+                            let (ST f4) = evalExprMaybe env iExpr
+                                (v4, newS4) = f4 newS3
+                                (ST f5) = evalStmt env (ForStmt NoInit expr iExpr cmd)
+                                (v5, newS5) = f5 newS4
+                                newSFinal = updateState s newS5 (difference newS1 s)
+                            in (v5, newSFinal)
+        (Bool False)-> (Nil, s) --checar se é s
+        (Error _) -> ((Error "Error"), s) --checar se é s
+        (_) -> ((Error "this is not a valid stmt"), s) --checar se é s
+    )
 -- BreakStatement
 evalStmt env (BreakStmt i)= do
     case i of
