@@ -76,11 +76,11 @@ if (hour < 18) {
 
 -- checar comportamento do parser com só if e if the else
 
-## Listas (similares a haskell)
-N/A
+## Listas (similares a haskell) [Feito]
+PS: Não está funcionando com Strings!
 
-## Funções head, tail e concat e len(feita na própria linguagem ñ em haskell) 
-N/A
+## Funções head, tail e concat e len(feita na própria linguagem ñ em haskell)
+Head: Em teste
 
 ## Fazer 10 exemplos de programas, ao menos 1 usando quicksort recursivo
 http://rosettacode.org/wiki/Sorting_algorithms/Quicksort
