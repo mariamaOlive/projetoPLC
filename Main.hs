@@ -35,12 +35,18 @@ evalExpr env (AssignExpr OpAssign (LVar var) expr) = do
 --PrefixExpression
 evalExpr env (PrefixExpr PrefixMinus expr) = do
     v <- evalExpr env expr
-    case v of 
+    case v of
         (Int val) -> return $ Int (-val)
         _ -> return $ Error "Return value is not valid"
 
+evalExpr env (PrefixExpr PrefixHead expr) = do
+    v <- evalExpr env expr
+    case v of
+        (Array exprs) -> return $ (head exprs)
+        _ -> return $ Error "The values returned is not a valid list"
+
 --ArrayLit
-evalExpr env (ArrayLit exprs) = 
+evalExpr env (ArrayLit exprs) =
     let newExprs = Prelude.map fst $ Prelude.map (\s -> getResult (evalExpr env s)) exprs
     in return $ Array newExprs
 
@@ -52,7 +58,7 @@ evalExpr env (CallExpr expr values)= ST (\s->
         (v, newS2) = g newS
         (ST h) = evalStmt env (BlockStmt cmds)
         (v2, newS3) = h newS2
-        newV2 = extractReturn v2 
+        newV2 = extractReturn v2
         newS4 = updateState newS newS3 (fromList (createMapParams args))
     in (newV2, newS4))
 
@@ -183,8 +189,8 @@ evalStmt env (ForStmt i expr iExpr cmd)= ST (\s->
             let (ST f3) = evalStmt env cmd
                 (v3, newS3) = f3 newS2
             in case v3 of
-                   (Break) -> 
-                                    let newSBreak = updateState s newS3 (difference newS1 s) 
+                   (Break) ->
+                                    let newSBreak = updateState s newS3 (difference newS1 s)
                                     in (Nil, newSBreak)
                    (_) ->
                             let (ST f4) = evalExprMaybe env iExpr
@@ -258,6 +264,8 @@ evaluate env (s:ss) = evalStmt env s >> evaluate env ss
 -- Operators
 --
 
+
+
 infixOp :: StateT -> InfixOp -> Value -> Value -> StateTransformer Value
 infixOp env OpAdd  (Int  v1) (Int  v2) = return $ Int  $ v1 + v2
 infixOp env OpSub  (Int  v1) (Int  v2) = return $ Int  $ v1 - v2
@@ -293,7 +301,10 @@ infixOp env op (Return v) v1 = do
 --
 
 environment :: Map String Value
-environment = empty
+environment =
+            let v = (Func [Id "lst"] [ReturnStmt (Just (PrefixExpr PrefixHead (VarRef (Id "lst"))))])
+            in insert "head" v
+            empty
 
 stateLookup :: StateT -> String -> StateTransformer Value
 stateLookup env var = ST $ \s ->

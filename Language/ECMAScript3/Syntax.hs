@@ -51,14 +51,14 @@ import Control.Arrow
 
 data JavaScript
   -- |A script in \<script\> ... \</script\> tags.
-  = Script [Statement] 
+  = Script [Statement]
   deriving (Show,Data,Typeable,Eq,Ord)
 
 -- | extracts statements from a JavaScript type
 unJavaScript :: JavaScript -> [Statement]
 unJavaScript (Script stmts) = stmts
 
-data Id = Id String 
+data Id = Id String
     deriving (Show,Eq,Ord,Data,Typeable)
 
 unId :: Id -> String
@@ -120,6 +120,7 @@ data PrefixOp = PrefixLNot -- ^ @!@
               | PrefixTypeof -- ^ @typeof@
               | PrefixVoid -- ^ @void@
               | PrefixDelete -- ^ @delete@
+              | PrefixHead
   deriving (Show,Data,Typeable,Eq,Ord)
 
 -- | Property names in an object initializer: see spec 11.1.5
@@ -127,18 +128,18 @@ data Prop = PropId Id -- ^ property name is an identifier, @foo@
             | PropString String -- ^ property name is a string, @\"foo\"@
             | PropNum Integer -- ^ property name is an integer, @42@
   deriving (Show,Data,Typeable,Eq,Ord)
- 
+
 -- | Left-hand side expressions: see spec 11.2
 data LValue
   = LVar String -- ^ variable reference, @foo@
   | LDot Expression String -- ^ @foo.bar@
   | LBracket Expression Expression -- ^ @foo[bar]@
-  deriving (Show, Eq, Ord, Data, Typeable) 
+  deriving (Show, Eq, Ord, Data, Typeable)
 
 -- | Expressions, see spec 11
 data Expression
   = StringLit String -- ^ @\"foo\"@, spec 11.1.3, 7.8
-  | RegexpLit String Bool Bool 
+  | RegexpLit String Bool Bool
     -- ^ @RegexpLit a regexp global?  case_insensitive?@ -- regular
     -- expression, see spec 11.1.3, 7.8
   | NumLit Double -- ^ @41.99999@, spec 11.1.3, 7.8
@@ -150,15 +151,15 @@ data Expression
   | ThisRef -- ^ @this@, spec 11.1.1
   | VarRef Id -- ^ @foo@, spec 11.1.2
   | DotRef Expression Id -- ^ @foo.bar@, spec 11.2.1
-  | BracketRef Expression {- container -} Expression {- key -} 
+  | BracketRef Expression {- container -} Expression {- key -}
     -- ^ @foo[bar@, spec 11.2.1
-  | NewExpr Expression {- constructor -} [Expression] 
+  | NewExpr Expression {- constructor -} [Expression]
     -- ^ @new foo(bar)@, spec 11.2.2
-  | PrefixExpr PrefixOp Expression 
+  | PrefixExpr PrefixOp Expression
     -- ^ @\@e@, spec 11.4 (excluding 11.4.4, 111.4.5)
-  | UnaryAssignExpr UnaryAssignOp LValue 
+  | UnaryAssignExpr UnaryAssignOp LValue
     -- ^ @++x@, @x--@ etc., spec 11.3, 11.4.4, 11.4.5
-  | InfixExpr InfixOp Expression Expression 
+  | InfixExpr InfixOp Expression Expression
     -- ^ @e1\@e2@, spec 11.5, 11.6, 11.7, 11.8, 11.9, 11.10, 11.11
   | CondExpr Expression Expression Expression
     -- ^ @e1 ? e2 : e3@, spec 11.12
@@ -179,15 +180,15 @@ data CaseClause = CaseClause (Expression) [Statement]
   deriving (Show,Data,Typeable,Eq,Ord)
 
 -- | Catch clause, spec 12.14
-data CatchClause = CatchClause Id Statement 
+data CatchClause = CatchClause Id Statement
                      -- ^ @catch (x) {...}@
   deriving (Show,Data,Typeable,Eq,Ord)
 
 -- | A variable declaration, spec 12.2
-data VarDecl = VarDecl Id (Maybe Expression) 
+data VarDecl = VarDecl Id (Maybe Expression)
                  -- ^ @var x = e;@
   deriving (Show,Data,Typeable,Eq,Ord)
-  
+
 -- | for initializer, spec 12.6
 data ForInit = NoInit -- ^ empty
                | VarInit [VarDecl] -- ^ @var x, y=42@
@@ -198,13 +199,13 @@ data ForInit = NoInit -- ^ empty
 data ForInInit = ForInVar Id -- ^ @var x@
                  | ForInLVal LValue -- ^ @foo.baz@, @foo[bar]@, @z@
  deriving (Show,Data,Typeable,Eq,Ord)
-  
+
 -- | Statements, spec 12.
-data Statement 
+data Statement
   = BlockStmt [Statement] -- ^ @{stmts}@, spec 12.1
   | EmptyStmt -- ^ @;@, spec 12.3
   | ExprStmt Expression -- ^ @expr;@, spec 12.4
-  | IfStmt Expression Statement Statement 
+  | IfStmt Expression Statement Statement
     -- ^ @if (e) stmt@, spec 12.5
   | IfSingleStmt Expression Statement
     -- ^ @if (e) stmt1 else stmt2@, spec 12.5
@@ -217,12 +218,12 @@ data Statement
   | BreakStmt (Maybe Id) -- ^ @break lab;@, spec 12.8
   | ContinueStmt (Maybe Id) -- ^ @continue lab;@, spec 12.7
   | LabelledStmt Id Statement -- ^ @lab: stmt@, spec 12.12
-  | ForInStmt ForInInit Expression Statement 
+  | ForInStmt ForInInit Expression Statement
     -- ^ @for (x in o) stmt@, spec 12.6
-  | ForStmt ForInit        
+  | ForStmt ForInit
             (Maybe Expression) -- test
             (Maybe Expression) -- increment
-            Statement          -- body 
+            Statement          -- body
     -- ^ @ForStmt a init test increment body@, @for (init; test,
     -- increment) body@, spec 12.6
   | TryStmt Statement {-body-} (Maybe CatchClause)
@@ -238,7 +239,7 @@ data Statement
     -- ^ @var x, y=42;@, spec 12.2
   | FunctionStmt Id {-name-} [Id] {-args-} [Statement] {-body-}
     -- ^ @function f(x, y, z) {...}@, spec 13
-  deriving (Show,Data,Typeable,Eq,Ord)  
+  deriving (Show,Data,Typeable,Eq,Ord)
 
 -- | Returns 'True' if the statement is an /IterationStatement/
 -- according to spec 12.6.
@@ -249,7 +250,7 @@ isIterationStmt s = case s of
   ForStmt {} -> True
   ForInStmt {} -> True
   _ -> False
-  
+
 -- | The ECMAScript standard defines certain syntactic restrictions on
 -- programs (or, more precisely, statements) that aren't easily
 -- enforced in the AST datatype. These restrictions have to do with
@@ -399,8 +400,8 @@ isValidIdPart c = isValidIdStart c || isValidIdPartUnicode c
           DecimalNumber        -> True
           ConnectorPunctuation -> True
           _                    -> False
-        
-          
+
+
 data EnclosingStatement = EnclosingIter [Label]
                           -- ^ The enclosing statement is an iteration statement
                         | EnclosingSwitch [Label]

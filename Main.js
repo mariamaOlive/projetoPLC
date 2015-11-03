@@ -1,13 +1,10 @@
-function quickSort(lista){
-}g
-
-quickSort([1,3,4,56,3,1]);
+head([5, 7, 3]);
 /*function foo(x) {
 	return 10;
 }
 
 function fat(n) {
-	
+
 	if(n==0) {
 		return 1;
 	} else {
