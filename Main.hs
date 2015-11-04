@@ -96,20 +96,23 @@ evalExpr env (ArrayLit exprs) =
     let newExprs = Prelude.map fst $ Prelude.map (\s -> getResult (evalExpr env s)) exprs
     in return $ Array newExprs
 
+
 --FunctionExpression
 evalExpr env (CallExpr expr values)= ST (\s->
     let (ST f) = evalExpr env expr
         ((Func args cmds), newS) = f s
-        (ST g) =initVarFunc env args values
+        t= localList cmds
+        tMap = (fromList (createMapParams t)) --mapeando var loca
+        (ST g) = (initVarFunc env args values)
         (v, newS2) = g newS
         (ST h) = evalStmt env (BlockStmt cmds)
         (v2, newS3) = h newS2
         newV2 = extractReturn v2
-        newS4 = updateState newS newS3 (fromList (createMapParams args))
+        newS4 = trace ("arg"++show args)(updateState newS newS3 (fromList (createMapParams args))) tMap
     in (newV2, newS4))
 
-updateState oldEnv newEnv paramsEnv =
-    let local1 = difference newEnv oldEnv
+updateState oldEnv newEnv paramsEnv localVar=
+    let local1 = localVar
         local2 = intersection newEnv paramsEnv
         local = union local1 local2
         globalNotUpdated = difference newEnv local
@@ -117,11 +120,25 @@ updateState oldEnv newEnv paramsEnv =
     in globalUpdated
 
 createMapParams [] = []
-createMapParams ((Id p):ps) = (p, ""): createMapParams ps
+createMapParams ((Id p):ps) = (p, Nil): createMapParams ps
 
 
 extractReturn (Return x) = x
 extractReturn v = v
+ 
+--recebe uma lista de Staments e retorna somente os que correspondem a VarDeclStmt
+--Dentro dessa lista de VarDeclStmt encontra-se um uma outra lista de varDecl isso que nos interessa
+--as strings de correspondentes a cada variável local pois irremos criar um map delas
+
+localList [] = []
+localList (x:xs) = do
+    case x of
+        VarDeclStmt x -> (localList2 x )++localList xs
+        _ -> localList xs
+
+localList2 [] = []
+localList2 ((VarDecl x m):xs) = x : localList2 xs
+
 
 {-
 evalExpr env (CallExpr expr values)= ST (\s->
@@ -225,7 +242,7 @@ evalStmt env (FunctionStmt (Id name) arg cmd)= do
     setVar name newF
 
 -- ForStatement [escopo local por algum motivo não está funcionando com o break]
-evalStmt env (ForStmt i expr iExpr cmd)= ST (\s->
+{-evalStmt env (ForStmt i expr iExpr cmd)= ST (\s->
     let (ST f1) = initFor env i
         (v1, newS1) = f1 s
         (ST f2) = evalExprMaybe env expr
@@ -249,6 +266,7 @@ evalStmt env (ForStmt i expr iExpr cmd)= ST (\s->
         (Error _) -> ((Error "Error"), s) --checar se é s
         (_) -> ((Error "this is not a valid stmt"), s) --checar se é s
     )
+-}
 -- BreakStatement
 evalStmt env (BreakStmt i)= do
     case i of

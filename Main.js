@@ -1,4 +1,18 @@
-q=5;
+a=4+3;
+var leel=1;
+function foo(x,b) {
+	var c,e;
+	c=1-b;
+	q=8;
+	a=100;
+	casa= 8;
+	leel=b;
+	return 10;
+	var d=2;
+}
+
+foo(3 ,3);
+q=10;
 
 //head(['a', 'b', 'c']);
 //head([1, 2, 3]);
