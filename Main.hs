@@ -102,7 +102,7 @@ evalExpr env (CallExpr expr values)= ST (\s->
     let (ST f) = evalExpr env expr
         ((Func args cmds), newS) = f s
         t= localList cmds
-        tMap = (fromList (createMapParams t)) --mapeando var loca
+        tMap = (fromList (createMapParams t)) --mapeando var local
         (ST g) = (initVarFunc env args values)
         (v, newS2) = g newS
         (ST h) = evalStmt env (BlockStmt cmds)
@@ -119,17 +119,22 @@ updateState oldEnv newEnv paramsEnv localVar=
         globalUpdated = union globalNotUpdated oldEnv
     in globalUpdated
 
+updateState2 oldEnv newEnv paramsEnv=
+    let local1 = difference newEnv oldEnv
+        local2 = intersection newEnv paramsEnv
+        local = union local1 local2
+        globalNotUpdated = difference newEnv local
+        globalUpdated = union globalNotUpdated oldEnv
+    in globalUpdated
+
 createMapParams [] = []
 createMapParams ((Id p):ps) = (p, Nil): createMapParams ps
 
 
 extractReturn (Return x) = x
 extractReturn v = v
- 
---recebe uma lista de Staments e retorna somente os que correspondem a VarDeclStmt
---Dentro dessa lista de VarDeclStmt encontra-se um uma outra lista de varDecl isso que nos interessa
---as strings de correspondentes a cada variável local pois irremos criar um map delas
 
+--funções para rastrear variáveis globais
 localList [] = []
 localList (x:xs) = do
     case x of
@@ -242,7 +247,7 @@ evalStmt env (FunctionStmt (Id name) arg cmd)= do
     setVar name newF
 
 -- ForStatement [escopo local por algum motivo não está funcionando com o break]
-{-evalStmt env (ForStmt i expr iExpr cmd)= ST (\s->
+evalStmt env (ForStmt i expr iExpr cmd)= ST (\s->
     let (ST f1) = initFor env i
         (v1, newS1) = f1 s
         (ST f2) = evalExprMaybe env expr
@@ -253,20 +258,20 @@ evalStmt env (FunctionStmt (Id name) arg cmd)= do
                 (v3, newS3) = f3 newS2
             in case v3 of
                    (Break) ->
-                                    let newSBreak = updateState s newS3 (difference newS1 s)
+                                    let newSBreak = updateState2 s newS3 (difference newS1 s)
                                     in (Nil, newSBreak)
                    (_) ->
                             let (ST f4) = evalExprMaybe env iExpr
                                 (v4, newS4) = f4 newS3
                                 (ST f5) = evalStmt env (ForStmt NoInit expr iExpr cmd)
                                 (v5, newS5) = f5 newS4
-                                newSFinal = updateState s newS5 (difference newS1 s)
+                                newSFinal = updateState2 s newS5 (difference newS1 s)
                             in (v5, newSFinal)
         (Bool False)-> (Nil, s) --checar se é s
         (Error _) -> ((Error "Error"), s) --checar se é s
         (_) -> ((Error "this is not a valid stmt"), s) --checar se é s
     )
--}
+
 -- BreakStatement
 evalStmt env (BreakStmt i)= do
     case i of

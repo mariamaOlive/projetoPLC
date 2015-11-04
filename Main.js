@@ -1,8 +1,8 @@
 a=4+3;
+
 var leel=1;
 function foo(x,b) {
 	var c,e;
-	c=1-b;
 	q=8;
 	a=100;
 	casa= 8;
@@ -11,11 +11,13 @@ function foo(x,b) {
 	var d=2;
 }
 
+
+
 foo(3 ,3);
 q=10;
 
 //head(['a', 'b', 'c']);
-//head([1, 2, 3]);
+head([1, 2, 3]);
 //head(['a', 'b', 'c']);
 /*
 //ver http://www.guj.com.br/java/171982-qual-a-diferenca-i-e-i
