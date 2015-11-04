@@ -1,4 +1,16 @@
-head([5, 7, 3]);
+//head(['a', 'b', 'c']);
+head([1, 2, 3]);
+//head(['a', 'b', 'c']);
+/*
+//ver http://www.guj.com.br/java/171982-qual-a-diferenca-i-e-i
+var i = 8;
+var j;
+var k;
+
+//j = ++i; // j == 9, i == 9
+//k = i++; // k == 8, i == 9
+*/
+
 /*function foo(x) {
 	return 10;
 }

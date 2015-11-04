@@ -32,6 +32,48 @@ evalExpr env (AssignExpr OpAssign (LVar var) expr) = do
             setVar var e
 
 
+--StringLit
+evalExpr env (StringLit string) = return $ String string
+
+--UnaryAssignExpr
+evalExpr env (UnaryAssignExpr PrefixInc (LVar var)) = do
+    v <- stateLookup env var
+    case v of
+        (Int val) -> do
+            e <- return $ Int (val + 1)
+            setVar var e
+        _ -> return $ Error "Return value is not valid"
+
+evalExpr env (UnaryAssignExpr PrefixDec (LVar var)) = do
+    v <- stateLookup env var
+    case v of
+        (Int val) -> do
+            e <- return $ Int (val - 1)
+            setVar var e
+        _ -> return $ Error "Return value is not valid"
+
+evalExpr env (UnaryAssignExpr PostfixInc (LVar var)) = ST(\s ->
+    let (ST f) = stateLookup env var
+        (v, newS) = f s
+    in case v of
+        (Int val) -> let
+                        (ST g)= setVar var (Int (val + 1))
+                        (v2, newS2) = g newS
+                        in (v, newS2)
+        _ -> (Error "Return value is not valid", s) --devo realmente retornar s?
+        )
+
+evalExpr env (UnaryAssignExpr PostfixDec (LVar var)) = ST(\s ->
+    let (ST f) = stateLookup env var
+        (v, newS) = f s
+    in case v of
+        (Int val) -> let
+                        (ST g)= setVar var (Int (val + 1))
+                        (v2, newS2) = g newS
+                        in (v, newS2)
+        _ -> (Error "Return value is not valid", s) --devo realmente retornar s?
+        )
+
 --PrefixExpression
 evalExpr env (PrefixExpr PrefixMinus expr) = do
     v <- evalExpr env expr

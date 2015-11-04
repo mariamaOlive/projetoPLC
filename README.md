@@ -72,12 +72,15 @@ if (hour < 18) {
     greeting = "Good evening";
 }
 
-## i++; ++i ; i--; --i
+## i++; ++i ; i--; --i [FEITO]
+Testar mais:
+implementado segundo http://www.guj.com.br/java/171982-qual-a-diferenca-i-e-i
 
 -- checar comportamento do parser com só if e if the else
 
 ## Listas (similares a haskell) [Feito]
-PS: Não está funcionando com Strings!
+PS: Não está funcionando com Strings! -> Corrigid 04 Oct.
+Implementado eval para StringLit
 
 ## Funções head, tail e concat e len(feita na própria linguagem ñ em haskell)
 Head: Em teste
