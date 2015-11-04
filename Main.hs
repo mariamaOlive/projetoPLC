@@ -21,11 +21,15 @@ evalExpr env (InfixExpr op expr1 expr2) = do
     v2 <- evalExpr env expr2
     infixOp env op v1 v2
 
+
 evalExpr env (AssignExpr OpAssign (LVar var) expr) = do
     v <- stateLookup env var
     case v of
         -- Variable not defined :(
-        (Error _) -> return $ Error $ (show var) ++ " not defined"
+        (Error _) -> do
+            varDecl env (VarDecl (Id var) Nothing)
+            e<- evalExpr env expr
+            setVar var e
         -- Variable defined, let's set its value
         _ -> do
             e <- evalExpr env expr

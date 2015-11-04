@@ -1,5 +1,7 @@
+q=5;
+
 //head(['a', 'b', 'c']);
-head([1, 2, 3]);
+//head([1, 2, 3]);
 //head(['a', 'b', 'c']);
 /*
 //ver http://www.guj.com.br/java/171982-qual-a-diferenca-i-e-i
