@@ -30,10 +30,12 @@ evalExpr env (AssignExpr OpAssign (LVar var) expr) = do
             varDecl env (VarDecl (Id var) Nothing)
             e<- evalExpr env expr
             setVar var e
+
         -- Variable defined, let's set its value
         _ -> do
             e <- evalExpr env expr
             setVar var e
+            
 
 
 --StringLit
@@ -102,7 +104,7 @@ evalExpr env (CallExpr expr values)= ST (\s->
     let (ST f) = evalExpr env expr
         ((Func args cmds), newS) = f s
         t= localList cmds
-        tMap = (fromList (createMapParams t)) --mapeando var local
+        tMap = trace ("locais:"++show(t)) (fromList (createMapParams t)) --mapeando var local
         (ST g) = (initVarFunc env args values)
         (v, newS2) = g newS
         (ST h) = evalStmt env (BlockStmt cmds)
@@ -138,7 +140,9 @@ extractReturn v = v
 localList [] = []
 localList (x:xs) = do
     case x of
-        VarDeclStmt x -> (localList2 x )++localList xs
+        VarDeclStmt d -> (localList2 d )++localList xs
+        IfSingleStmt expr (BlockStmt stmt) -> (localList (stmt))++(localList xs)
+        IfStmt expr (BlockStmt stmt1) (BlockStmt stmt2) -> localList stmt1 ++ localList stmt2 ++ localList xs
         _ -> localList xs
 
 localList2 [] = []

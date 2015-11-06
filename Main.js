@@ -1,18 +1,42 @@
 a=4+3;
 
 var leel=1;
+
+
+
+
 function foo(x,b) {
 	var c,e;
 	q=8;
 	a=100;
-	casa= 8;
-	leel=b;
-	return 10;
+	if(q==8){
+		var v;
+		casa= 5;
+		leel=b;
+
+		if(a==100){
+		var a1=0;
+		}else{
+			var a1=0;
+		}
+	}
+
+	
+	function foo2(a){
+		haha=3;
+		return a;
+	}
+
+	
+	
+	return foo2(3);
 	var d=2;
 }
 
 
 
+
+foo2(3);
 foo(3 ,3);
 q=10;
 
@@ -20,6 +44,18 @@ q=10;
 head([1, 2, 3]);
 //head(['a', 'b', 'c']);
 /*
+
+if(a==100){
+		var a1=0;
+	}else{
+		var a1=0;
+	}
+
+	for(var i=0; i<10; i=i+1){
+		var q2=1;
+	}
+
+
 //ver http://www.guj.com.br/java/171982-qual-a-diferenca-i-e-i
 var i = 8;
 var j;
