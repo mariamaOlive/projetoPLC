@@ -121,6 +121,7 @@ data PrefixOp = PrefixLNot -- ^ @!@
               | PrefixVoid -- ^ @void@
               | PrefixDelete -- ^ @delete@
               | PrefixHead
+              | PrefixTail
   deriving (Show,Data,Typeable,Eq,Ord)
 
 -- | Property names in an object initializer: see spec 11.1.5

@@ -97,7 +97,7 @@ evalExpr env (UnaryAssignExpr PostfixDec (LVar var)) = ST(\s ->
         )
 
 -- Prefix Minus
--- This adds the feature that enables us to work with negative integers
+-- This adds the feature that allows us to work with negative integers
 -- [our code]
 evalExpr env (PrefixExpr PrefixMinus expr) = do
     v <- evalExpr env expr
@@ -107,13 +107,23 @@ evalExpr env (PrefixExpr PrefixMinus expr) = do
 
 
 -- Head
--- Gives the head element of an Array
+-- Gives the head element of a list
 -- [our code]
 evalExpr env (PrefixExpr PrefixHead expr) = do
     v <- evalExpr env expr
     case v of
         (Array exprs) -> return $ (head exprs)
         _ -> return $ Error "The values returned is not a valid list"
+
+-- Tail
+-- Gives the tail of a list
+-- [our code]
+evalExpr env (PrefixExpr PrefixTail expr) = do
+    v <- evalExpr env expr
+    case v of
+        (Array exprs) -> return $ Array (tail exprs)
+        _ -> return $ Error "The values returned is not a valid list"
+
 
 --ArrayLit
 -- Evaluates an Array
@@ -137,8 +147,8 @@ evalExpr env (CallExpr expr values)= ST (\s->
     in (newV2, newS4))
 
 
--- Given a global state, a local state e a param state,
--- 'updateState' give us the new global state according to js scope definition
+-- Given a global state, a local state and a param state,
+-- 'updateState' gives us the new global state according to js scope definition
 -- [our code]
 updateState oldEnv newEnv paramsEnv =
     let local1 = difference newEnv oldEnv
@@ -194,12 +204,12 @@ evalStmt env (ReturnStmt expr) = do
 -- BlockStatement
 -- Evaluates a block statement
 evalStmt env (BlockStmt (stmt:sx))= do
-    v<- trace ("avaliei") $ (evalStmt env stmt)
+    v<- (evalStmt env stmt)
     case v of
-        (Break) -> trace ("break") $return Break
-        (Return x) -> trace ("return: " ++ show x) $ return (Return x)
-        (_) -> trace ("(_)" ++ show v) $ evalStmt env (BlockStmt sx)
-evalStmt env (BlockStmt []) = trace ("entrei aqui") $ return Nil
+        (Break) -> return Break
+        (Return x) -> return (Return x)
+        (_) -> evalStmt env (BlockStmt sx)
+evalStmt env (BlockStmt []) = return Nil
 
 -- IfSingleStatement
 -- Evaluates a single if statement
@@ -327,8 +337,9 @@ infixOp env op v1 (Var x) = do
         error@(Error _) -> return error
         val -> infixOp env op v1 val
 
+-- TODO: aqui é para ser "a"?
 infixOp env op (Return v) v1 = do
-    trace ("eh uma funcao") $ return $ Error "a"
+     return $ Error "a"
 
 --
 -- Environment and auxiliary functions
@@ -336,8 +347,11 @@ infixOp env op (Return v) v1 = do
 
 environment :: Map String Value
 environment =
-            let v = (Func [Id "lst"] [ReturnStmt (Just (PrefixExpr PrefixHead (VarRef (Id "lst"))))])
-            in insert "head" v
+            let
+                vHead = (Func [Id "lst"] [ReturnStmt (Just (PrefixExpr PrefixHead (VarRef (Id "lst"))))])
+                vTail = (Func [Id "lst"] [ReturnStmt (Just (PrefixExpr PrefixTail (VarRef (Id "lst"))))])
+            in insert "head" vHead $ insert "tail" vTail
+
             empty
 
 stateLookup :: StateT -> String -> StateTransformer Value
