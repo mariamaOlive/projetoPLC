@@ -1,6 +1,42 @@
 var l1 = [1, 2, 3];
 var l2 = [4, 5, 6];
 concat(l1, l2);
+
+function foo(x,b) {
+	var c,e;
+	q=8;
+	a=100;
+	if(q==8){
+		var v;
+		casa= 5;
+		leel=b;
+
+		if(a==100){
+		var a1=0;
+		}else{
+			var a1=0;
+		}
+	}
+
+	return foo2(3);
+	var d=2;
+}
+
+
+function foo2(a){
+		haha=3;
+		return a;
+}
+
+foo2(3);
+foo(3 ,3);
+q=10;
+
+
+
+
+
+
 /*
 var d = 30;
 for(var i = 0; i < 10; i++) {

@@ -141,7 +141,6 @@ evalExpr env (ArrayLit exprs) =
 -- [our code]
 evalExpr env (CallExpr expr values)= ST (\s->
     let (ST f) = evalExpr env expr
-        ((Func args cmds), newS) = f s
         t= localList cmds
         tMap = trace ("locais:"++show(t)) (fromList (createMapParams t)) --mapeando var local
         ((Func args cmds), newS) = f s --PS: quando uma função não é reconhecida, essa linha retorna erro
@@ -150,14 +149,22 @@ evalExpr env (CallExpr expr values)= ST (\s->
         (ST h) = evalStmt env (BlockStmt cmds)
         (v2, newS3) = h newS2
         newV2 = extractReturn v2
-        newS4 = updateState newS newS3 (fromList (createMapParams args))
+        newS4 = updateState newS newS3 (fromList (createMapParams args)) tMap
     in (newV2, newS4))
 
 
 -- Given a global state, a local state and a param state,
 -- 'updateState' gives us the new global state according to js scope definition
 -- [our code]
-updateState oldEnv newEnv paramsEnv =
+updateState oldEnv newEnv paramsEnv localVar=
+     let local1 = localVar
+         local2 = intersection newEnv paramsEnv
+         local = union local1 local2
+         globalNotUpdated = difference newEnv local
+         globalUpdated = union globalNotUpdated oldEnv
+     in globalUpdated
+ 
+updateState2 oldEnv newEnv paramsEnv=
     let local1 = difference newEnv oldEnv
         local2 = intersection newEnv paramsEnv
         local = union local1 local2
@@ -165,10 +172,11 @@ updateState oldEnv newEnv paramsEnv =
         globalUpdated = union globalNotUpdated oldEnv
     in globalUpdated
 
+
 -- Given a list of (Id v), this creates a list of (v, "")
 -- [our code]
 createMapParams [] = []
-createMapParams ((Id p):ps) = (p, ""): createMapParams ps
+createMapParams ((Id p):ps) = (p, Nil): createMapParams ps
 
 
 -- Extract Return
@@ -303,14 +311,14 @@ evalStmt env (ForStmt i expr iExpr cmd)= ST (\s->
                 (v3, newS3) = f3 newS2
             in case v3 of
                    (Break) ->
-                                    let newSBreak = updateState s newS3 (difference newS1 s)
+                                    let newSBreak = updateState2 s newS3 (difference newS1 s)
                                     in (Nil, newSBreak)
                    (_) ->
                             let (ST f4) = evalExprMaybe env iExpr
                                 (v4, newS4) = f4 newS3
                                 (ST f5) = evalStmt env (ForStmt NoInit expr iExpr cmd)
                                 (v5, newS5) = f5 newS4
-                                newSFinal = updateState s newS5 (difference newS1 s)
+                                newSFinal = updateState2 s newS5 (difference newS1 s)
                             in (v5, newSFinal)
         (Bool False)-> (Nil, s) --checar se é s
         (Error _) -> ((Error "Error"), s) --checar se é s
