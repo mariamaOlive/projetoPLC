@@ -4,16 +4,15 @@ Track List:
 
 Pendências:
 * Remover o escopo local do for
+* Tail, Concat e Len
 
 #Mini interpretador JS
 
 Ver aqruivo 'consideracoes.txt' para algumas explicações
 
-## Menos (Operador unário de -)
-feito
+## Menos (Operador unário de -) - feito
 
-## Funções
-feito
+## Funções - feito
 
 ###def:
 function mult(p1, p2) {
@@ -26,8 +25,7 @@ var x = mult(10, 20)
 ou
 mult(10, 20)
 
-## Funções Recursivas
-feito
+## Funções Recursivas - feito
 
 ###def:
 
@@ -39,13 +37,10 @@ function fib(n) {
     }
 }
 
-## Variaveis Locais - FUNCTION
-feito
-
+## Variaveis Locais - feito
 var carName = " Volvo";
 
-## Variaveis Globais
-feito
+## Variaveis Globais - feito
 
 var carName = "Volvo";
 
@@ -53,17 +48,15 @@ funtion foo() {
    carName = "Uno";
 }
 
-## Variaveis Automaticamente Globais
-PENDENTE
+## Variaveis Automaticamente Globais - PENDENTE
 
-## Comentários
+## Comentários - feito
 feito por definição
 
 //
 /*   */
 
-## for + break
-feito
+## for + break - feito
 
 for (i = 0; i < 10; i++) {
     if (i === 3) { break; }
@@ -71,15 +64,13 @@ for (i = 0; i < 10; i++) {
 }
 
 
-## if the
-feito
+## if then - feito
 
 if (hour < 18) {
     greeting = "Good day";
 }
 
-## if then else
-feito
+## if then else - feito
 
 if (hour < 18) {
     greeting = "Good day";
@@ -87,22 +78,19 @@ if (hour < 18) {
     greeting = "Good evening";
 }
 
-## i++; ++i ; i--; --i
-feito
+## i++; ++i ; i--; --i - feito
 
 PS: Testar mais:
 implementado segundo http://www.guj.com.br/java/171982-qual-a-diferenca-i-e-i
 
 
-## Listas (similares a haskell)
-feito
+## Listas (similares a haskell) - feito
 
-## Funções head, tail e concat e len(feita na própria linguagem ñ em haskell)
+## Funções head, tail e concat e len(feita na própria linguagem ñ em haskell) - PENDENTE
 Head: Em teste
 Tail, concat e len: PENDENTE
 
-## Fazer 10 exemplos de programas, ao menos 1 usando quicksort recursivo
-PENDENTE
+## Fazer 10 exemplos de programas, ao menos 1 usando quicksort recursivo - PENDENTE
 http://rosettacode.org/wiki/Sorting_algorithms/Quicksort
 
 
