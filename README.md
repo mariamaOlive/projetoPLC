@@ -1,6 +1,6 @@
 Track List:
-** quando uma função não é reconhecida a "linha 98" (comentada no main.hs) retorna um erro
-** head[], qual deve ser o resultado?
+* quando uma função não é reconhecida a "linha 98" (comentada no main.hs) retorna um erro
+* head[], qual deve ser o resultado?
 
 Pendências:
 * Remover o escopo local do for
