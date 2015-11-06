@@ -184,8 +184,8 @@ localList (x:xs) = do
         VarDeclStmt d -> (localList2 d )++localList xs
         IfSingleStmt expr (BlockStmt stmt) -> (localList (stmt))++(localList xs)
         IfStmt expr (BlockStmt stmt1) (BlockStmt stmt2) -> localList stmt1 ++ localList stmt2 ++ localList xs
-        ForStmt (VarInit i) exp1 exp2 (BlockStmt stmt) ->(localList2 i)++(localList (stmt))++(localList xs)
-
+        ForStmt (VarInit i) exp1 exp2 (BlockStmt stmt) ->(localList2 i)++(localList stmt)++(localList xs)
+        ForStmt NoInit exp1 exp2 (BlockStmt stmt) ->localList (stmt)++(localList xs)
         _ -> localList xs
 
 localList2 [] = []

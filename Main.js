@@ -30,8 +30,9 @@ function foo(x,b) {
 		}
 
 		flat=0;
-		for(j=0; j<10;j++){
-			flat=flat+1;
+		j=0;
+		for(; j<10;j++){
+			var ap=flat+1;
 		}
 	}
 
