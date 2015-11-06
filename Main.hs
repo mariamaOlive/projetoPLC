@@ -33,16 +33,11 @@ evalExpr env (InfixExpr op expr1 expr2) = do
 evalExpr env (AssignExpr OpAssign (LVar var) expr) = do
     v <- stateLookup env var
     case v of
-        -- Variable not defined :(
-<<<<<<< HEAD
+        -- Variable not defined :(, we initilize it and set its value
         (Error _) -> do
             varDecl env (VarDecl (Id var) Nothing)
             e<- evalExpr env expr
             setVar var e
-
-=======
-        (Error _) -> return $ Error $ (show var) ++ " not defined"
->>>>>>> bdcc95fa0b996b6cac0ebd1aabc7dd456a387350
         -- Variable defined, let's set its value
         _ -> do
             e <- evalExpr env expr
@@ -182,7 +177,6 @@ createMapParams ((Id p):ps) = (p, ""): createMapParams ps
 extractReturn (Return x) = x
 extractReturn v = v
 
-<<<<<<< HEAD
 --funções para rastrear variáveis globais
 localList [] = []
 localList (x:xs) = do
@@ -222,8 +216,6 @@ evalExpr env (CallExpr expr values)= ST (\s->
     {-(Func args cmds)<- evalExpr env expr --retorna um ST e temos que pegar os args
     initVarFunc env args values
     evalStmt env (BlockStmt cmds)-}
-=======
->>>>>>> bdcc95fa0b996b6cac0ebd1aabc7dd456a387350
 
 --Initializing several var for FunctionExpression
 -- [our implementation]
