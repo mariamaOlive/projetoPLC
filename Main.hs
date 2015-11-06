@@ -311,6 +311,7 @@ evaluate env (s:ss) = evalStmt env s >> evaluate env ss
 -- Operators
 --
 infixOp :: StateT -> InfixOp -> Value -> Value -> StateTransformer Value
+infixOp env OpConcat  (Array  v1) (Array  v2) = return $ Array  $ v1 ++ v2
 infixOp env OpAdd  (Int  v1) (Int  v2) = return $ Int  $ v1 + v2
 infixOp env OpSub  (Int  v1) (Int  v2) = return $ Int  $ v1 - v2
 infixOp env OpMul  (Int  v1) (Int  v2) = return $ Int  $ v1 * v2
@@ -350,8 +351,8 @@ environment =
             let
                 vHead = (Func [Id "lst"] [ReturnStmt (Just (PrefixExpr PrefixHead (VarRef (Id "lst"))))])
                 vTail = (Func [Id "lst"] [ReturnStmt (Just (PrefixExpr PrefixTail (VarRef (Id "lst"))))])
-            in insert "head" vHead $ insert "tail" vTail
-
+                vConcat = (Func [(Id "lst1"), (Id "lst2")] [ReturnStmt (Just (InfixExpr OpConcat (VarRef (Id "lst1")) (VarRef (Id "lst2"))))])
+            in insert "head" vHead $ insert "tail" vTail $ insert "concat" vConcat
             empty
 
 stateLookup :: StateT -> String -> StateTransformer Value

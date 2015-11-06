@@ -88,6 +88,7 @@ data InfixOp = OpLT -- ^ @<@
              | OpBXor -- ^ @^@
              | OpBOr -- ^ @|@
              | OpAdd -- ^ @+@
+             | OpConcat
     deriving (Show,Data,Typeable,Eq,Ord,Enum)
 
 -- | Assignment operators: see spec 11.13

@@ -1,4 +1,6 @@
-tail([1, 2, 3]);
+var l1 = [1, 2, 3];
+var l2 = [4, 5, 6];
+concat(l1, l2);
 /*
 var d = 30;
 for(var i = 0; i < 10; i++) {
