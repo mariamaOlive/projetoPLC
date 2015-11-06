@@ -3,7 +3,7 @@ Track List:
 * head[], qual deve ser o resultado?
 
 Pendências:
-* Remover o escopo local do for
+* Remover o escopo local do for - FEITO!
 * Tail, Concat e Len
 
 #Mini interpretador JS
@@ -48,7 +48,7 @@ funtion foo() {
    carName = "Uno";
 }
 
-## Variaveis Automaticamente Globais - PENDENTE
+## Variaveis Automaticamente Globais - FEITO
 
 ## Comentários - feito
 feito por definição
