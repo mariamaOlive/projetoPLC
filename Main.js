@@ -1,3 +1,16 @@
+var l1 = [1, 2, 3];
+var l2 = [4, 5, 6];
+concat(l1, l2);
+/*
+var d = 30;
+for(var i = 0; i < 10; i++) {
+	var c = 20;
+	if(i == 2) {
+		break;
+	}
+}
+*/
+/*
 a=4+3;
 
 var leel=1;
@@ -39,7 +52,7 @@ function foo(x,b) {
 foo2(3);
 foo(3 ,3);
 q=10;
-
+*
 //head(['a', 'b', 'c']);
 head([1, 2, 3]);
 //head(['a', 'b', 'c']);
