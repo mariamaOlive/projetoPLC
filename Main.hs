@@ -163,14 +163,6 @@ updateState oldEnv newEnv paramsEnv localVar=
          globalNotUpdated = difference newEnv local
          globalUpdated = union globalNotUpdated oldEnv
      in globalUpdated
- 
-updateState2 oldEnv newEnv paramsEnv=
-    let local1 = difference newEnv oldEnv
-        local2 = intersection newEnv paramsEnv
-        local = union local1 local2
-        globalNotUpdated = difference newEnv local
-        globalUpdated = union globalNotUpdated oldEnv
-    in globalUpdated
 
 
 -- Given a list of (Id v), this creates a list of (v, "")
@@ -192,6 +184,8 @@ localList (x:xs) = do
         VarDeclStmt d -> (localList2 d )++localList xs
         IfSingleStmt expr (BlockStmt stmt) -> (localList (stmt))++(localList xs)
         IfStmt expr (BlockStmt stmt1) (BlockStmt stmt2) -> localList stmt1 ++ localList stmt2 ++ localList xs
+        ForStmt (VarInit i) exp1 exp2 (BlockStmt stmt) ->(localList2 i)++(localList (stmt))++(localList xs)
+
         _ -> localList xs
 
 localList2 [] = []
@@ -300,7 +294,23 @@ evalStmt env (FunctionStmt (Id name) arg cmd)= do
 -- Allows us to use the for structure
 -- Error:
 -- [our code]
-evalStmt env (ForStmt i expr iExpr cmd)= ST (\s->
+--New For with global variables!!!!!
+evalStmt env (ForStmt i expr iExpr cmd)= do
+    v1<-initFor env i
+    v2<-evalExprMaybe env expr
+    case v2 of
+        (Bool True) ->do
+            v3<-evalStmt env cmd
+            case v3 of
+                (Break) -> return Nil
+                (_) -> evalExprMaybe env iExpr >> evalStmt env (ForStmt NoInit expr iExpr cmd)
+        (Bool False)-> return Nil
+        (Error _) -> return $ Error "Error" 
+        (_) -> return (Error "this is not a valid stmt")  
+   
+
+
+{-evalStmt env (ForStmt i expr iExpr cmd)= ST (\s->
     let (ST f1) = initFor env i
         (v1, newS1) = f1 s
         (ST f2) = evalExprMaybe env expr
@@ -324,7 +334,7 @@ evalStmt env (ForStmt i expr iExpr cmd)= ST (\s->
         (Error _) -> ((Error "Error"), s) --checar se é s
         (_) -> ((Error "this is not a valid stmt"), s) --checar se é s
     )
-
+-}
 -- BreakStatement
 -- When a break is detected, it creates a new indirection to
 -- represent the break statement

@@ -8,7 +8,7 @@ function foo(x,b) {
 	a=100;
 	if(q==8){
 		var v;
-		casa= 5;
+		
 		leel=b;
 
 		if(a==100){
@@ -18,7 +18,24 @@ function foo(x,b) {
 		}
 	}
 
-	return foo2(3);
+	for(var i = 0; i < 10; i++) {
+	var c = 20;
+	var caramba = 20;
+		if(i == 2) {
+			casa= 5;
+			if(casa==5){
+				casa2=0;
+				var casinha=7;
+			}
+		}
+
+		flat=0;
+		for(j=0; j<10;j++){
+			flat=flat+1;
+		}
+	}
+
+	return 2;
 	var d=2;
 }
 
@@ -31,9 +48,6 @@ function foo2(a){
 foo2(3);
 foo(3 ,3);
 q=10;
-
-
-
 
 
 
