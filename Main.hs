@@ -109,26 +109,6 @@ evalExpr env (PrefixExpr PrefixMinus expr) = do
         (Int val) -> return $ Int (-val)
         _ -> return $ Error "Return value is not valid"
 
-
--- Head
--- Gives the head element of a list
--- [our code]
-evalExpr env (PrefixExpr PrefixHead expr) = do
-    v <- evalExpr env expr
-    case v of
-        (Array exprs) -> return $ (head exprs)
-        _ -> return $ Error "The values returned is not a valid list"
-
--- Tail
--- Gives the tail of a list
--- [our code]
-evalExpr env (PrefixExpr PrefixTail expr) = do
-    v <- evalExpr env expr
-    case v of
-        (Array exprs) -> return $ Array (tail exprs)
-        _ -> return $ Error "The values returned is not a valid list"
-
-
 --ArrayLit
 -- Evaluates an Array
 -- [our code]
@@ -369,11 +349,6 @@ infixOp env op (Return v) v1 = do
 --
 -- Environment and auxiliary functions
 --
-getHead env lst = 
-            let var = stateLookup env lst
-                ((Array v), e) = getResult var
-                (Int v1) = head v
-            in v1
 
 environment :: Map String Value
 environment = insert "head" (Native vHead)
