@@ -11,6 +11,7 @@ data Value = Bool Bool
     | Break
     | Return Value
     | Array [Value]
+    | Native ([Value]->Value)
 
 --
 -- Pretty Printer
@@ -27,7 +28,7 @@ instance Show Value where
   show (Func args cmds) = "func"
   show Break = "show Break"
   show (Return v) = "show Return"
-  show (Array []) = ""
+  show (Array []) = "[]"
   show (Array values) = "[" ++ showListContents values ++ "]"
 -- This function could be replaced by (unwords.map show). The unwords
 -- function takes a list of String values and uses them to build a

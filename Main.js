@@ -1,11 +1,75 @@
+/*
+function foo(a) {
+	function foo2() {
+		var casa = 1;
+		return casa;
+	}
+	var c = foo2();
+	return c;
+}
+
+foo(10);
+*/
+
+
+function len(lst) {
+	if(lst == []) {
+		return 0;
+	} else {
+		return 1 + len(tail(lst));
+	}
+}
+
+len([1]);
+
+
+/*
 var l1 = [1, 2, 3];
 var l2 = [4, 5, 6];
-concat(l1, l2);
+
+v=concat([], []);
+*/
+
+/*
+
+
+for(var i = 0; i < 10; i++) {
+	var c = 20;
+	
+	for(j=0; j<10; j=j+1){
+
+		if(j== 2) {
+		break;
+		}
+	}
+
+	if (i==4){
+		break;
+	}
+}
+
+var l1 = [1, 2, 3];
+var l2 = [4, 5, 6];
+
+head([1, 2, 3]);
+var d = 30;
+for(var i = 0; i < 10; i++) {
+	var c = 20;
+	if(i == 2) {
+		break;
+	}
+}
+*/
+/*
+a=4+3;
+
+var leel=1;
+
 
 function foo(x,b) {
 	var c,e;
 	q=8;
-	a=100;
+	var a=100;
 	if(q==8){
 		var v;
 		
@@ -36,7 +100,7 @@ function foo(x,b) {
 		}
 	}
 
-	return 2;
+	return a+1;
 	var d=2;
 }
 
@@ -47,26 +111,8 @@ function foo2(a){
 }
 
 foo2(3);
-foo(3 ,3);
+var chec= foo(3 ,3);
 q=10;
-
-
-
-/*
-var d = 30;
-for(var i = 0; i < 10; i++) {
-	var c = 20;
-	if(i == 2) {
-		break;
-	}
-}
-*/
-/*
-a=4+3;
-
-var leel=1;
-
-
 
 
 function foo(x,b) {

@@ -139,18 +139,32 @@ evalExpr env (ArrayLit exprs) =
 -- CallExpression
 -- Evaluates a function call
 -- [our code]
+
 evalExpr env (CallExpr expr values)= ST (\s->
     let (ST f) = evalExpr env expr
-        t= localList cmds
-        tMap = trace ("locais:"++show(t)) (fromList (createMapParams t)) --mapeando var local
-        ((Func args cmds), newS) = f s --PS: quando uma função não é reconhecida, essa linha retorna erro
-        (ST g) =initVarFunc env args values
-        (v, newS2) = g newS
-        (ST h) = evalStmt env (BlockStmt cmds)
-        (v2, newS3) = h newS2
-        newV2 = extractReturn v2
-        newS4 = updateState newS newS3 (fromList (createMapParams args)) tMap
-    in (newV2, newS4))
+        (v0, newS) = f s --PS: quando uma funÁ„o n„o È reconhecida, essa linha retorna erro
+    in case v0 of
+        (Func args cmds) ->
+            let 
+                t= localList cmds
+                tMap = fromList (createMapParams t) --mapeando var local
+                (ST g) = initVarFunc env args values --TODO corrigir
+                (v, newS2) = g newS
+                (ST h) = evalStmt env (BlockStmt cmds)
+                (v2, newS3) = h newS2
+                newV2 = extractReturn v2
+                newS4 = updateState newS newS3 (fromList (createMapParams args)) tMap
+            in (newV2, newS4)
+        (Native f) -> 
+            let 
+                listValue=Prelude.map fst $ Prelude.map getResult (evalExprAdpt newS values)
+            in  (f listValue, newS)
+    )
+
+--EvalVarRefLits 
+evalExprAdpt env []= []
+evalExprAdpt env ((VarRef (Id id)):xs) = (stateLookup env id):(evalExprAdpt env xs)
+evalExprAdpt env ((ArrayLit array):xs) = (evalExpr env (ArrayLit array)):(evalExprAdpt env xs)
 
 
 -- Given a global state, a local state and a param state,
@@ -191,33 +205,6 @@ localList (x:xs) = do
 localList2 [] = []
 localList2 ((VarDecl x m):xs) = x : localList2 xs
 
-
-{-
-evalExpr env (CallExpr expr values)= ST (\s->
-    let (ST f) = evalExpr env expr
-        ((Func args cmds), newS) = f s
-        (ST g) =initVarFunc env args values
-        (v, newS2) = let
-                    (vx, newSx) = g newS
-                    in case vx of
-                        (Error e) = return $ Error e
-                        _ = return (vx, newSx)
-        (ST h) = evalStmt env (BlockStmt cmds)
-        (v2, newS3) = h newS2
-        newS4 = updateState newS newS3
-    in (v2, newS4))
--}
-
-{-updateState oldEnv newEnv =
-    let local = difference newEnv oldEnv
-        globalNotUpdated = difference newEnv local
-        globalUpdated = union globalNotUpdated oldEnv
-    in globalUpdated
- -}
-
-    {-(Func args cmds)<- evalExpr env expr --retorna um ST e temos que pegar os args
-    initVarFunc env args values
-    evalStmt env (BlockStmt cmds)-}
 
 --Initializing several var for FunctionExpression
 -- [our implementation]
@@ -309,32 +296,6 @@ evalStmt env (ForStmt i expr iExpr cmd)= do
         (_) -> return (Error "this is not a valid stmt")  
    
 
-
-{-evalStmt env (ForStmt i expr iExpr cmd)= ST (\s->
-    let (ST f1) = initFor env i
-        (v1, newS1) = f1 s
-        (ST f2) = evalExprMaybe env expr
-        (v2, newS2) = f2 newS1
-    in case v2 of
-        (Bool True) ->
-            let (ST f3) = evalStmt env cmd
-                (v3, newS3) = f3 newS2
-            in case v3 of
-                   (Break) ->
-                                    let newSBreak = updateState2 s newS3 (difference newS1 s)
-                                    in (Nil, newSBreak)
-                   (_) ->
-                            let (ST f4) = evalExprMaybe env iExpr
-                                (v4, newS4) = f4 newS3
-                                (ST f5) = evalStmt env (ForStmt NoInit expr iExpr cmd)
-                                (v5, newS5) = f5 newS4
-                                newSFinal = updateState2 s newS5 (difference newS1 s)
-                            in (v5, newSFinal)
-        (Bool False)-> (Nil, s) --checar se é s
-        (Error _) -> ((Error "Error"), s) --checar se é s
-        (_) -> ((Error "this is not a valid stmt"), s) --checar se é s
-    )
--}
 -- BreakStatement
 -- When a break is detected, it creates a new indirection to
 -- represent the break statement
@@ -375,7 +336,6 @@ evaluate env (s:ss) = evalStmt env s >> evaluate env ss
 -- Operators
 --
 infixOp :: StateT -> InfixOp -> Value -> Value -> StateTransformer Value
-infixOp env OpConcat  (Array  v1) (Array  v2) = return $ Array  $ v1 ++ v2
 infixOp env OpAdd  (Int  v1) (Int  v2) = return $ Int  $ v1 + v2
 infixOp env OpSub  (Int  v1) (Int  v2) = return $ Int  $ v1 - v2
 infixOp env OpMul  (Int  v1) (Int  v2) = return $ Int  $ v1 * v2
@@ -409,15 +369,29 @@ infixOp env op (Return v) v1 = do
 --
 -- Environment and auxiliary functions
 --
+getHead env lst = 
+            let var = stateLookup env lst
+                ((Array v), e) = getResult var
+                (Int v1) = head v
+            in v1
 
 environment :: Map String Value
-environment =
-            let
-                vHead = (Func [Id "lst"] [ReturnStmt (Just (PrefixExpr PrefixHead (VarRef (Id "lst"))))])
-                vTail = (Func [Id "lst"] [ReturnStmt (Just (PrefixExpr PrefixTail (VarRef (Id "lst"))))])
-                vConcat = (Func [(Id "lst1"), (Id "lst2")] [ReturnStmt (Just (InfixExpr OpConcat (VarRef (Id "lst1")) (VarRef (Id "lst2"))))])
-            in insert "head" vHead $ insert "tail" vTail $ insert "concat" vConcat
-            empty
+environment = insert "head" (Native vHead)
+              $insert "tail" (Native vTail)
+              $insert "concat" (Native vConcat)
+              empty
+
+
+vTail ((Array vList):xs) = Array (tail vList)
+vTail _ = Error "argumentos invalidos. A entrada nao eh uma lista"
+
+
+vHead ((Array vList):xs)= head vList    
+vHead _ = Error "argumentos invalidos. A entrada nao eh uma lista"
+
+
+vConcat [(Array values1), (Array values2)] = Array (values1++values2)
+vConcat _ = Error "argumentos invalidos. A entrada nao eh uma lista"
 
 stateLookup :: StateT -> String -> StateTransformer Value
 stateLookup env var = ST $ \s ->
