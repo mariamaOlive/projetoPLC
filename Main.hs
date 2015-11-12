@@ -326,6 +326,7 @@ infixOp env OpLEq  (Int  v1) (Int  v2) = return $ Bool $ v1 <= v2
 infixOp env OpGT   (Int  v1) (Int  v2) = return $ Bool $ v1 > v2
 infixOp env OpGEq  (Int  v1) (Int  v2) = return $ Bool $ v1 >= v2
 infixOp env OpEq   (Int  v1) (Int  v2) = return $ Bool $ v1 == v2
+infixOp env OpEq  (Array  v1) (Array  v2) = return $ Bool  $ eqArray v1 v2
 infixOp env OpNEq  (Bool v1) (Bool v2) = return $ Bool $ v1 /= v2
 infixOp env OpLAnd (Bool v1) (Bool v2) = return $ Bool $ v1 && v2
 infixOp env OpLOr  (Bool v1) (Bool v2) = return $ Bool $ v1 || v2
@@ -356,6 +357,11 @@ environment = insert "head" (Native vHead)
               $insert "concat" (Native vConcat)
               empty
 
+eqArray [] [] = True
+eqArray _ [] = False
+eqArray [] _ = False
+eqArray ((Int v1):vs1) ((Int v2):vs2) = (v1 == v2) && (eqArray vs1 vs2)
+eqArray ((String v1):vs1) ((String v2):vs2) = (v1 == v2) && (eqArray vs1 vs2)
 
 vTail ((Array vList):xs) = Array (tail vList)
 vTail _ = Error "argumentos invalidos. A entrada nao eh uma lista"

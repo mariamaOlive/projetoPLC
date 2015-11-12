@@ -20,7 +20,7 @@ function len(lst) {
 	}
 }
 
-len([1]);
+len(concat(["a", "b"], ["c"]));
 
 
 /*
