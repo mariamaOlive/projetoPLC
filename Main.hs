@@ -112,16 +112,16 @@ evalExpr env (PrefixExpr PrefixMinus expr) = do
 --ArrayLit
 -- Evaluates an Array
 -- [our code]
-evalExpr env (ArrayLit exprs) =
-    let newExprs = Prelude.map fst $ Prelude.map (\s -> getResult (evalExpr env s)) exprs
-    in return $ Array newExprs
+evalExpr env (ArrayLit exprs) = do
+    v <- mapM (evalExpr env) exprs
+    return (Array v)
 
 -- CallExpression
 -- Evaluates a function call
 -- [our code]
 
 evalExpr env (CallExpr expr values)= ST (\s->
-    let (ST f) = evalExpr env expr
+    let (ST f) = trace ("chamando call expr: " ++ showTree s) $ evalExpr env expr
         (v0, newS) = f s --PS: quando uma funÁ„o n„o È reconhecida, essa linha retorna erro
     in case v0 of
         (Func args cmds) ->
@@ -136,15 +136,19 @@ evalExpr env (CallExpr expr values)= ST (\s->
                 newS4 = updateState newS newS3 (fromList (createMapParams args)) tMap
             in (newV2, newS4)
         (Native f) -> 
-            let 
-                listValue=Prelude.map fst $ Prelude.map getResult (evalExprAdpt newS values)
-            in  (f listValue, newS)
+                let
+                (ST g) = mapM (evalExpr env) values
+                (v, newS1) = g newS
+                in ((f v), newS1)
+        _ -> trace ("aqui: " ++ show v0) (Int 0, newS) 
     )
+--
+--[CallExpr (VarRef (Id "foo")) [VarRef (Id "array1")]])]
 
 --EvalVarRefLits 
-evalExprAdpt env []= []
-evalExprAdpt env ((VarRef (Id id)):xs) = (stateLookup env id):(evalExprAdpt env xs)
-evalExprAdpt env ((ArrayLit array):xs) = (evalExpr env (ArrayLit array)):(evalExprAdpt env xs)
+--evalExprAdpt env []= []
+--evalExprAdpt env ((VarRef (Id id)):xs) = (stateLookup env id):(evalExprAdpt env xs)
+--evalExprAdpt env ((ArrayLit array):xs) = (evalExpr env (ArrayLit array)):(evalExprAdpt env xs)
 
 
 -- Given a global state, a local state and a param state,
@@ -368,7 +372,7 @@ vTail _ = Error "argumentos invalidos. A entrada nao eh uma lista"
 
 
 vHead ((Array vList):xs)= head vList    
-vHead _ = Error "argumentos invalidos. A entrada nao eh uma lista"
+vHead a = trace (show a) Error "argumentos invalidos. A entrada nao eh uma lista"
 
 
 vConcat [(Array values1), (Array values2)] = Array (values1++values2)

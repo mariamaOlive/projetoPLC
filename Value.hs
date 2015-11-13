@@ -30,6 +30,7 @@ instance Show Value where
   show (Return v) = "show Return"
   show (Array []) = "[]"
   show (Array values) = "[" ++ showListContents values ++ "]"
+  show (Native f) = "native function"
 -- This function could be replaced by (unwords.map show). The unwords
 -- function takes a list of String values and uses them to build a
 -- single String where the words are separated by spaces.

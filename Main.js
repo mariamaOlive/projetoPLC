@@ -1,4 +1,65 @@
+
+var array1 = [100, 5, 7, 50, 34, 60, 16];
+
+
+
+//v=foo(array1);
+
+function smaller(pivot, lst) {
+
+	var acc;
+
+	if(lst == []) {
+		return [];
+	}
+
+	if(head(lst) < pivot) {
+		acc = concat([head(lst)],smaller(pivot, tail(lst)));
+	}else{
+		acc= concat([], smaller(pivot, tail(lst),acc));
+	}
+
+	return acc;
+} 
+
+function bigger(pivot, lst){
+	var acc;
+
+	if(lst == []) {
+		return [];
+	}
+
+	if(head(lst) > pivot) {
+		acc = concat([head(lst)],bigger(pivot, tail(lst)));
+	}else{
+		acc= concat([], bigger(pivot, tail(lst),acc));
+	}
+
+	return acc;
+}
+
+function qs(lst) {
+	var pivot=head(lst);
+
+	if(lst==[]){
+		return [];
+	}
+
+	var s=smaller(pivot,lst);
+	var b=bigger(pivot,lst);
+
+	var r1=qs(s);
+	var r2=qs(b);
+	var r=concat(r1,[pivot]);
+	r=concat(r,r2);
+	return r; 
+
+}
+
+retorno=qs(array1);
+
 /*
+
 function foo(a) {
 	function foo2() {
 		var casa = 1;
@@ -11,7 +72,7 @@ function foo(a) {
 foo(10);
 */
 
-
+/* FUNCAO LEN
 function len(lst) {
 	if(lst == []) {
 		return 0;
@@ -21,7 +82,7 @@ function len(lst) {
 }
 
 len(concat(["a", "b"], ["c"]));
-
+*/
 
 /*
 var l1 = [1, 2, 3];
