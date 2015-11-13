@@ -1,0 +1,23 @@
+/*
+> for
+> break
+> for aninhado
+> ++
+> escopo automaticamento global
+
+O Programa deve executar o for, respeitando a condição de break;
+k representa o valor de i
+l representa o valor de j
+k e l são automaticamente globais
+o resultado vede ser: k = 7, l = 9
+*/
+
+for(var i = 0; i < 10; i=i+1) {
+  for(var j = i; j < 10; j++)
+
+	if(j-i == 2) {
+    k = i;
+		l = j;
+		break;
+	}
+}
