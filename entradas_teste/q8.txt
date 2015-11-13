@@ -1,0 +1,30 @@
+/*
+> função
+> recursao
+> head
+> tail
+
+Conta o numero de ocorrencias do caractere a
+
+*/
+
+function contaA(lst) {
+  if(lst == []) {
+    return 0;
+  } else {
+		if(head(lst) == "a") {
+				return 1 + contaA(tail(lst));
+		} else {
+			return contaA(tail(lst));
+		}
+	}
+}
+
+
+var lst1 = ["E", "u", " ", "a", "m", "o", " ", "h", "a", "s", "k", "e", "l", "l"];
+var lst2 = ["C", "a", "s", "t", "o", "r"];
+var lst3 = ["B", "o", "r", "b", "a"];
+
+var res1 = contaA(lst1);
+var res2 = contaA(lst2);
+var res3 = contaA(lst3);
