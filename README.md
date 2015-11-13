@@ -1,6 +1,7 @@
 Track List:
 * quando uma função não é reconhecida a "linha 98" (comentada no main.hs) retorna um erro
 * head[], qual deve ser o resultado?
+* se funcao ao existir -> retornar funcao nao existe
 
 Pendências:
 * Remover o escopo local do for - FEITO!

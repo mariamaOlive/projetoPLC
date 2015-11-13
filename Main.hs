@@ -42,13 +42,19 @@ evalExpr env (AssignExpr OpAssign (LVar var) expr) = do
         _ -> do
             e <- evalExpr env expr
             setVar var e
-            
+
 
 
 -- StringLit
 -- This Allows us to create an array of String
 -- [our code]
 evalExpr env (StringLit string) = return $ String string
+
+-- BoolLit
+-- This Allows us to create an array of String
+-- [our code]
+evalExpr env (BoolLit bool) = return $ Bool bool
+
 
 -- ++i
 -- Allows us to use an expression such as ++i
@@ -125,25 +131,25 @@ evalExpr env (CallExpr expr values)= ST (\s->
         (v0, newS) = f s --PS: quando uma funÁ„o n„o È reconhecida, essa linha retorna erro
     in case v0 of
         (Func args cmds) ->
-            let 
+            let
                 t= localList cmds
                 tMap = fromList (createMapParams t) --mapeando var local
-                (ST g) = initVarFunc env args values 
+                (ST g) = initVarFunc env args values
                 (v, newS2) = g newS
                 (ST h) = evalStmt env (BlockStmt cmds)
                 (v2, newS3) = h newS2
                 newV2 = extractReturn v2
                 newS4 = updateState newS newS3 (fromList (createMapParams args)) tMap
             in (newV2, newS4)
-        (Native f) -> 
+        (Native f) ->
                 let
                 (ST g) = mapM (evalExpr env) values
                 (v, newS1) = g newS
                 in ((f v), newS1)
-        _ -> (Int 0, newS) 
+        _ -> (Int 0, newS)
     )
 
---EvalVarRefLits 
+--EvalVarRefLits
 --evalExprAdpt env []= []
 --evalExprAdpt env ((VarRef (Id id)):xs) = (stateLookup env id):(evalExprAdpt env xs)
 --evalExprAdpt env ((ArrayLit array):xs) = (evalExpr env (ArrayLit array)):(evalExprAdpt env xs)
@@ -274,9 +280,9 @@ evalStmt env (ForStmt i expr iExpr cmd)= do
                 (Break) -> return Nil
                 (_) -> evalExprMaybe env iExpr >> evalStmt env (ForStmt NoInit expr iExpr cmd)
         (Bool False)-> return Nil
-        (Error _) -> return $ Error "Error" 
-        (_) -> return (Error "this is not a valid stmt")  
-   
+        (Error _) -> return $ Error "Error"
+        (_) -> return (Error "this is not a valid stmt")
+
 
 -- BreakStatement
 -- When a break is detected, it creates a new indirection to
@@ -329,6 +335,7 @@ infixOp env OpGEq  (Int  v1) (Int  v2) = return $ Bool $ v1 >= v2
 infixOp env OpEq   (Int  v1) (Int  v2) = return $ Bool $ v1 == v2
 infixOp env OpEq   (String  v1) (String  v2) = return $ Bool $ v1 == v2
 infixOp env OpEq  (Array  v1) (Array  v2) = return $ Bool  $ eqArray v1 v2
+infixOp env OpEq  (Bool  v1) (Bool  v2) = return $ Bool  $ v1 == v2
 infixOp env OpNEq  (Bool v1) (Bool v2) = return $ Bool $ v1 /= v2
 infixOp env OpLAnd (Bool v1) (Bool v2) = return $ Bool $ v1 && v2
 infixOp env OpLOr  (Bool v1) (Bool v2) = return $ Bool $ v1 || v2
@@ -367,7 +374,7 @@ vTail ((Array vList):xs) = Array (tail vList)
 vTail _ = Error "argumentos invalidos. A entrada nao eh uma lista"
 
 
-vHead ((Array vList):xs)= head vList    
+vHead ((Array vList):xs)= head vList
 vHead a = Error "argumentos invalidos. A entrada nao eh uma lista"
 
 
