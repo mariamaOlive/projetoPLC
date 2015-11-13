@@ -88,7 +88,6 @@ data InfixOp = OpLT -- ^ @<@
              | OpBXor -- ^ @^@
              | OpBOr -- ^ @|@
              | OpAdd -- ^ @+@
-             | OpConcat
     deriving (Show,Data,Typeable,Eq,Ord,Enum)
 
 -- | Assignment operators: see spec 11.13
@@ -121,8 +120,7 @@ data PrefixOp = PrefixLNot -- ^ @!@
               | PrefixTypeof -- ^ @typeof@
               | PrefixVoid -- ^ @void@
               | PrefixDelete -- ^ @delete@
-              | PrefixHead
-              | PrefixTail
+
   deriving (Show,Data,Typeable,Eq,Ord)
 
 -- | Property names in an object initializer: see spec 11.1.5

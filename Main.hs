@@ -142,8 +142,6 @@ evalExpr env (CallExpr expr values)= ST (\s->
                 in ((f v), newS1)
         _ -> trace ("aqui: " ++ show v0) (Int 0, newS) 
     )
---
---[CallExpr (VarRef (Id "foo")) [VarRef (Id "array1")]])]
 
 --EvalVarRefLits 
 --evalExprAdpt env []= []
@@ -346,10 +344,6 @@ infixOp env op v1 (Var x) = do
     case var of
         error@(Error _) -> return error
         val -> infixOp env op v1 val
-
--- TODO: aqui é para ser "a"?
-infixOp env op (Return v) v1 = do
-     return $ Error "a"
 
 --
 -- Environment and auxiliary functions
