@@ -3,7 +3,7 @@
 //-Single If
 //-If-else
 //-Inicializaçao de variáveis automaticamente globais de dentro de função
-//If aninhado
+//-If aninhado
 
 
 var b=8;
@@ -28,6 +28,6 @@ function foo(x,b) {
 	return a+1;
 }
 
-foo(b,i);
+//foo(b,i);
 foo(i,b);
 

@@ -1,34 +1,38 @@
+var nome= ["m", "a", "r", "i", "a", "m", "a"];
+var nome1= ["i", "g", "o", "r"];
+var nome2 = ["f", "a", "n", "n", "y"];
+var nome3 = ["c", "a", "s", "t", "o", "r"];
 
-var b=8;
-var i=100;
 
-function foo(x,b) {
-	
-	var a=100;
-	a3=300;
-	if(b==8){
-		var v =1;
-		z=10;
-
-		if(x==100){
-			var a1=2;
-			a2=1;
-		}else{
-			var a1=0;
-			a2=5;
-		}
+function len(lst) {
+	if(lst == []) {
+		return 0;
+	} else {
+		return 1 + len(tail(lst));
 	}
-
-	return v+1;
 }
 
-x=0;
 
-foo(b,i);
-//foo(i,b);
+function vowelConcat(string){
+	var sLen= len(string);
+	rtn=[];
 
+	for(i=0; i<sLen; i++){
 
+		if(head(string)=="a" || head(string)=="e" || head(string)=="i" || head(string)=="o" || head(string)=="u" 
+		|| head(string)=="A" || head(string)=="E" || head(string)=="I" || head(string)=="O" || head(string)=="U"){
+			rtn=concat(rtn,[head(string)]);
+		}
+		string=tail(string);
+	}
 
+	return rtn;
+
+}
+
+r2=vowelConcat(noe1);
+r3=vowelConcat(nome2);
+r4=vowelConcat(nome3);
 
 /*var array1 = [100, 5, 7, 50, 34, 60, 16];
 

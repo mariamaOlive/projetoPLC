@@ -327,6 +327,7 @@ infixOp env OpLEq  (Int  v1) (Int  v2) = return $ Bool $ v1 <= v2
 infixOp env OpGT   (Int  v1) (Int  v2) = return $ Bool $ v1 > v2
 infixOp env OpGEq  (Int  v1) (Int  v2) = return $ Bool $ v1 >= v2
 infixOp env OpEq   (Int  v1) (Int  v2) = return $ Bool $ v1 == v2
+infixOp env OpEq   (String  v1) (String  v2) = return $ Bool $ v1 == v2
 infixOp env OpEq  (Array  v1) (Array  v2) = return $ Bool  $ eqArray v1 v2
 infixOp env OpNEq  (Bool v1) (Bool v2) = return $ Bool $ v1 /= v2
 infixOp env OpLAnd (Bool v1) (Bool v2) = return $ Bool $ v1 && v2

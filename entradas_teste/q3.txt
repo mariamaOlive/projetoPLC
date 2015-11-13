@@ -1,0 +1,41 @@
+//Funcionalidades do programa:
+//-Function
+//-head, tail, concat
+//-For
+//Retire todas a vogais de uma dada string e devolva ela concatenada
+
+var nome= ["m", "a", "r", "i", "a", "m", "a"];
+var nome1= ["i", "g", "o", "r"];
+var nome2 = ["f", "a", "n", "n", "y"];
+var nome3 = ["c", "a", "s", "t", "o", "r"];
+
+
+function len(lst) {
+	if(lst == []) {
+		return 0;
+	} else {
+		return 1 + len(tail(lst));
+	}
+}
+
+
+function vowelConcat(string){
+	var sLen= len(string);
+	rtn=[];
+
+	for(i=0; i<sLen; i++){
+
+		if(head(string)=="a" || head(string)=="e" || head(string)=="i" || head(string)=="o" || head(string)=="u" 
+		|| head(string)=="A" || head(string)=="E" || head(string)=="I" || head(string)=="O" || head(string)=="U"){
+			rtn=concat(rtn,[head(string)]);
+		}
+		string=tail(string);
+	}
+
+	return rtn;
+
+}
+
+r2=vowelConcat(noe1);
+r3=vowelConcat(nome2);
+r4=vowelConcat(nome3);
