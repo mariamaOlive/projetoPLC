@@ -121,14 +121,14 @@ evalExpr env (ArrayLit exprs) = do
 -- [our code]
 
 evalExpr env (CallExpr expr values)= ST (\s->
-    let (ST f) = trace ("chamando call expr: " ++ showTree s) $ evalExpr env expr
+    let (ST f) = evalExpr env expr
         (v0, newS) = f s --PS: quando uma funÁ„o n„o È reconhecida, essa linha retorna erro
     in case v0 of
         (Func args cmds) ->
             let 
                 t= localList cmds
                 tMap = fromList (createMapParams t) --mapeando var local
-                (ST g) = initVarFunc env args values --TODO corrigir
+                (ST g) = initVarFunc env args values 
                 (v, newS2) = g newS
                 (ST h) = evalStmt env (BlockStmt cmds)
                 (v2, newS3) = h newS2
@@ -140,7 +140,7 @@ evalExpr env (CallExpr expr values)= ST (\s->
                 (ST g) = mapM (evalExpr env) values
                 (v, newS1) = g newS
                 in ((f v), newS1)
-        _ -> trace ("aqui: " ++ show v0) (Int 0, newS) 
+        _ -> (Int 0, newS) 
     )
 
 --EvalVarRefLits 
@@ -294,7 +294,6 @@ initFor env  i = do
         (NoInit) -> return Nil --StateTransformer Value
         (VarInit var) -> evalInit env var  --StateTransformer Value
         (ExprInit expr) -> evalExpr env expr --StateTransformer Value
-        (_) -> return $ Error "problems Initializing var" --StateTransformer Value
 
 
 evalInit:: StateT -> [VarDecl] -> StateTransformer Value
@@ -345,6 +344,8 @@ infixOp env op v1 (Var x) = do
         error@(Error _) -> return error
         val -> infixOp env op v1 val
 
+infixOp env op _ _ = return $ Error "It was not possible to proceed with the evaluation"
+
 --
 -- Environment and auxiliary functions
 --
@@ -366,7 +367,7 @@ vTail _ = Error "argumentos invalidos. A entrada nao eh uma lista"
 
 
 vHead ((Array vList):xs)= head vList    
-vHead a = trace (show a) Error "argumentos invalidos. A entrada nao eh uma lista"
+vHead a = Error "argumentos invalidos. A entrada nao eh uma lista"
 
 
 vConcat [(Array values1), (Array values2)] = Array (values1++values2)
@@ -422,7 +423,10 @@ instance Applicative StateTransformer where
 --
 
 showResult :: (Value, StateT) -> String
-showResult (val, defs) = show val ++ "\n" ++ show (toList defs) ++ "\n"
+showResult (val, defs) = do
+    case val of
+        Error v -> show(Error v)++ "\n"
+        _-> show val ++ "\n" ++ show (toList defs) ++ "\n"
 
 getResult :: StateTransformer Value -> (Value, StateT)
 getResult (ST f) = f empty

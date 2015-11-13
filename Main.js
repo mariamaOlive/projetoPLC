@@ -1,5 +1,36 @@
 
-var array1 = [100, 5, 7, 50, 34, 60, 16];
+var b=8;
+var i=100;
+
+function foo(x,b) {
+	
+	var a=100;
+	a3=300;
+	if(b==8){
+		var v =1;
+		z=10;
+
+		if(x==100){
+			var a1=2;
+			a2=1;
+		}else{
+			var a1=0;
+			a2=5;
+		}
+	}
+
+	return v+1;
+}
+
+x=0;
+
+foo(b,i);
+//foo(i,b);
+
+
+
+
+/*var array1 = [100, 5, 7, 50, 34, 60, 16];
 
 
 
@@ -58,7 +89,7 @@ function qs(lst) {
 
 retorno=qs(array1);
 
-/*
+
 
 function foo(a) {
 	function foo2() {

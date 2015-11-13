@@ -1,0 +1,33 @@
+//Funcionalidades do programa:
+//-Function
+//-Single If
+//-If-else
+//-Inicializaçao de variáveis automaticamente globais de dentro de função
+//If aninhado
+
+
+var b=8;
+var i=100;
+
+function foo(x,b) {
+	
+	var a=100;
+	if(b==8){
+		var v =1;
+		z=10;
+
+		if(x==100){
+			var a1=2;
+			a2=1;
+		}else{
+			var a1=0;
+			a2=1;
+		}
+	}
+
+	return a+1;
+}
+
+foo(b,i);
+foo(i,b);
+
