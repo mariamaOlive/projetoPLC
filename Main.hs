@@ -278,6 +278,7 @@ evalStmt env (ForStmt i expr iExpr cmd)= do
             v3<-evalStmt env cmd
             case v3 of
                 (Break) -> return Nil
+                (Return v) -> trace ("return do for: " ++ show v) return v
                 (_) -> evalExprMaybe env iExpr >> evalStmt env (ForStmt NoInit expr iExpr cmd)
         (Bool False)-> return Nil
         (Error _) -> return $ Error "Error"
