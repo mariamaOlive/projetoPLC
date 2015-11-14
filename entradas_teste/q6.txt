@@ -1,0 +1,31 @@
+/*
+NUMEROS PRIMOS
+
+> funcao
+> funcao recursiva
+> return
+> aninhamento
+
+Retorna se um numero eh ou nao eh primo
+
+Ex: isPrime(7) == True
+    isPrime(1) == False
+    isPrime(80) == False
+*/
+
+function isPrime (n)
+{
+    if (n < 2) {
+		return false;
+	}
+
+    for (var i = 2; i < n; i++) {
+		if (n%i == 0) {
+			e = "entrou aqui";
+            return false;
+        }
+    }
+    return true;
+}
+
+isPrime(907);
