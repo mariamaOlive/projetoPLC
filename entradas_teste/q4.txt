@@ -1,0 +1,33 @@
+//Funcionalidades do programa: Retorna uma lista com os n elementos da sequencia de fibonacci
+//-Função Recursiva e Iterativa
+//-Listas
+//-Concat
+//-For
+//-SingleIf
+
+
+function fib(n) {
+	if(n ==0) {
+		return 0;
+	} 
+
+	if(n==1){
+		return 1;
+	}
+
+	return fib(n-1) + fib(n-2);
+}
+
+function fibList(n){  
+
+	var lst=[];
+
+	for(var i=0; i<n; i++){
+		lst=concat(lst,[fib(i)]);
+	}
+
+	return lst;
+}
+
+var result= fibList(20);
+

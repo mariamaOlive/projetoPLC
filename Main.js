@@ -1,38 +1,93 @@
-var nome= ["m", "a", "r", "i", "a", "m", "a"];
-var nome1= ["i", "g", "o", "r"];
-var nome2 = ["f", "a", "n", "n", "y"];
-var nome3 = ["c", "a", "s", "t", "o", "r"];
+function smaller(pivot, lst) {
 
+	var acc;
 
-function len(lst) {
 	if(lst == []) {
-		return 0;
-	} else {
-		return 1 + len(tail(lst));
+		return [];
 	}
+
+	if(head(lst) <= pivot) {
+		acc = concat([head(lst)],smaller(pivot, tail(lst)));
+	}else{
+		acc= concat([], smaller(pivot, tail(lst),acc));
+	}
+
+	return acc;
+} 
+
+function bigger(pivot, lst){
+	var acc;
+
+	if(lst == []) {
+		return [];
+	}
+
+	if(head(lst) > pivot) {
+		acc = concat([head(lst)],bigger(pivot, tail(lst)));
+	}else{
+		acc= concat([], bigger(pivot, tail(lst),acc));
+	}
+
+	return acc;
+}
+
+function qs(lst) {
+	var pivot=head(lst);
+
+	if(lst==[]){
+		return [];
+	}
+
+	lst=tail(lst);
+	var s=smaller(pivot,lst);
+	var b=bigger(pivot,lst);
+
+	var r1=qs(s);
+	var r2=qs(b);
+	var r=concat(r1,[pivot]);
+	r=concat(r,r2);
+	return r; 
+
+}
+
+retorno=qs([0, 5, 4, 6, 6, 0, 4, 9, 4]);
+
+
+/*var cpf= [0, 5, 4, 6, 6, 0, 4, 9, 4];
+
+
+function gerador(lst){
+	
+	var lst1=lst;
+	var lst2=lst;
+	var s=0;
+
+	for(i=10; i>1; i=i-1){
+		s=s+(i*head(lst1));
+		lst=tail(lst1);
+	}
+
+	var r1=(s*10)%11;
+	if (r1==10){
+		r1=0;
+	}
+
+	s=0;
+	for(i=11; i>3; i=i-1){
+		s=s+(i*head(lst2));
+		lst=tail(lst2);
+	}
+
+	s=s+(r1*2);
+
+	var r2= (s*10)%11;
+
+	return ;
+	//return lst;
 }
 
 
-function vowelConcat(string){
-	var sLen= len(string);
-	rtn=[];
-
-	for(i=0; i<sLen; i++){
-
-		if(head(string)=="a" || head(string)=="e" || head(string)=="i" || head(string)=="o" || head(string)=="u" 
-		|| head(string)=="A" || head(string)=="E" || head(string)=="I" || head(string)=="O" || head(string)=="U"){
-			rtn=concat(rtn,[head(string)]);
-		}
-		string=tail(string);
-	}
-
-	return rtn;
-
-}
-
-r2=vowelConcat(noe1);
-r3=vowelConcat(nome2);
-r4=vowelConcat(nome3);
+dig=gerador(cpf);
 
 /*var array1 = [100, 5, 7, 50, 34, 60, 16];
 

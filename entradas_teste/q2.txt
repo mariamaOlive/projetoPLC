@@ -1,5 +1,5 @@
 //Funcionalidades do programa:
-//Funções recursivas: fibonacci e fatorial
+//Teste de Função recursiva: fatorial
 
 function fat(n) {
 
@@ -10,16 +10,5 @@ function fat(n) {
 	}
 }
 
-function fib(n) {
-	if(n <= 2) {
-		return 1;
-	} else {
-		return fib(n-1) + fib(n-2);
-	}
-}
-
-
+var fa1=fat(0);
 var fa=fat(4);
-var fi=fib(4);
-result= fat(0)*fib(0);
-result2= fib(5)-fat(5);

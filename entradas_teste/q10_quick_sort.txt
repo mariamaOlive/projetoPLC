@@ -1,0 +1,53 @@
+function smaller(pivot, lst) {
+
+	var acc;
+
+	if(lst == []) {
+		return [];
+	}
+
+	if(head(lst) <= pivot) {
+		acc = concat([head(lst)],smaller(pivot, tail(lst)));
+	}else{
+		acc= concat([], smaller(pivot, tail(lst),acc));
+	}
+
+	return acc;
+} 
+
+function bigger(pivot, lst){
+	var acc;
+
+	if(lst == []) {
+		return [];
+	}
+
+	if(head(lst) > pivot) {
+		acc = concat([head(lst)],bigger(pivot, tail(lst)));
+	}else{
+		acc= concat([], bigger(pivot, tail(lst),acc));
+	}
+
+	return acc;
+}
+
+function qs(lst) {
+	var pivot=head(lst);
+
+	if(lst==[]){
+		return [];
+	}
+
+	lst=tail(lst);
+	var s=smaller(pivot,lst);
+	var b=bigger(pivot,lst);
+
+	var r1=qs(s);
+	var r2=qs(b);
+	var r=concat(r1,[pivot]);
+	r=concat(r,r2);
+	return r; 
+
+}
+
+retorno=qs([0, 5, 4, 6, 6, 0, 4, 9, 4]);

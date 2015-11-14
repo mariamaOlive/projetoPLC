@@ -1,0 +1,23 @@
+//Funcionalidades do programa: Gerador de digito de CPF - Dado CPF calcula o digito
+//-Função Iterativa com uso de i--
+//-Listas
+//-For
+
+
+
+var cpf= [0, 5, 4, 6, 6, 0, 4, 9, 4];
+
+
+function gerador(lst){
+	
+	var s=0;
+
+	for(i=10; i>1; i--){
+		s=s+(i*head(cpf));
+		cpf=tail(cpf);
+	}
+
+	return (sum*10)%11;
+}
+
+
