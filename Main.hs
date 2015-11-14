@@ -139,7 +139,7 @@ evalExpr env (CallExpr expr values)= ST (\s->
                 (ST h) = evalStmt env (BlockStmt cmds)
                 (v2, newS3) = h newS2
                 newV2 = extractReturn v2
-                newS4 = updateState newS newS3 (fromList (createMapParams args)) tMap
+                newS4 = trace ("retorno func: " ++ show v2) updateState newS newS3 (fromList (createMapParams args)) tMap
             in (newV2, newS4)
         (Native f) ->
                 let
@@ -230,7 +230,7 @@ evalStmt env (BlockStmt (stmt:sx))= do
     v<- (evalStmt env stmt)
     case v of
         (Break) -> return Break
-        (Return x) -> return (Return x)
+        (Return x) -> trace ("o block retornou: " ++ show x) return (Return x)
         (_) -> evalStmt env (BlockStmt sx)
 evalStmt env (BlockStmt []) = return Nil
 
@@ -277,8 +277,8 @@ evalStmt env (ForStmt i expr iExpr cmd)= do
         (Bool True) ->do
             v3<-evalStmt env cmd
             case v3 of
-                (Break) -> return Nil
-                (Return v) -> trace ("return do for: " ++ show v) return v
+                (Break) -> return Break
+                (Return v) -> trace ("return do for: " ++ show v) return $ Return v
                 (_) -> evalExprMaybe env iExpr >> evalStmt env (ForStmt NoInit expr iExpr cmd)
         (Bool False)-> return Nil
         (Error _) -> return $ Error "Error"
@@ -292,7 +292,7 @@ evalStmt env (ForStmt i expr iExpr cmd)= do
 evalStmt env (BreakStmt i)= do
     case i of
         Nothing -> return Break --Case we want to break the for
-        (Just i) -> return $ Error "Error"
+        (Just i) -> return $ Error "Error while processing a break stmt"
 
 --Initializing ForInit --!ERRor test it!
 initFor:: StateT -> ForInit -> StateTransformer Value
