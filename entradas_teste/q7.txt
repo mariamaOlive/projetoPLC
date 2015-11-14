@@ -1,18 +1,44 @@
 /*
-> função
+LISTAS DE LISTAS
 
+> funcao
+> iteracao com listas
+> return
+> head
+> tail
+> concat
 
-Retorna se um numero é primo
+Retorna uma lista de listas de maneira linearizada
 
+Ex: var db = [["m", "a", "r", "i"], ["f", "a", "n", "n", "y"], ["i", "g", "o", "r"]];
+    linearizar(db) == ["m" "a" "r" "i" "-" "f" "a" "n" "n" "y" "-" "i" "g" "o" "r"]
 */
 
-isPrimo(n) {
-  var primo = true;
-  for(int i = 2; i < n; i++) {
-    if(n%i == 0) {
-      primo = false;
-      break;
-    }
-  }
-  return primo;
+
+var db = [["m", "a", "r", "i"], ["f", "a", "n", "n", "y"], ["i", "g", "o", "r"]];
+
+function len(lst) {
+	if(lst == []) {
+		return 0;
+	} else {
+		return 1 + len(tail(lst));
+	}
 }
+
+function linearizar(lstOfLst) {
+    var result = [];
+	var size = len(lstOfLst);
+
+    for(var i = 0; i < size; i++) {
+        result = concat(result, head(lstOfLst));
+        lstOfLst = tail(lstOfLst);
+
+		if(i != (size-1)) {
+			result = concat(result, ["-"]);
+		}
+    }
+
+    return result;
+}
+
+linearizar(db);
