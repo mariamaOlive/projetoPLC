@@ -1,23 +1,44 @@
-//Funcionalidades do programa: Gerador de digito de CPF - Dado CPF calcula o digito
+//Funcionalidades do programa: Gerador de dígito de CPF - Dado CPF calcula o dígito
 //-Função Iterativa com uso de i--
 //-Listas
 //-For
 
 
-
-var cpf= [0, 5, 4, 6, 6, 0, 4, 9, 4];
+var cpf= [0, 5, 4, 7, 6, 1, 4, 3, 4];
 
 
 function gerador(lst){
 	
+	var lst1=lst;
+	var lst2=lst;
 	var s=0;
 
-	for(i=10; i>1; i--){
-		s=s+(i*head(cpf));
-		cpf=tail(cpf);
+	for(var i=10; i>1; i--){
+		s=s+(i*head(lst1));
+		lst1=tail(lst1);
 	}
 
-	return (sum*10)%11;
+	var r1=(s*10)%11;
+	if (r1==10){
+		r1=0;
+	}
+
+	s=0;
+	for(var i=11; i>2; i--){
+		s=s+(i*head(lst2));
+		lst2=tail(lst2);
+	}
+
+	s=s+(r1*2);
+
+	var r2= (s*10)%11;
+	if(r2==10){
+		r2=0;
+	}
+
+	return (10*r1)+r2;
 }
 
+
+dig=gerador(cpf);
 
