@@ -1,3 +1,4 @@
+/*
 function smaller(pivot, lst) {
 
 	var acc;
@@ -6,14 +7,14 @@ function smaller(pivot, lst) {
 		return [];
 	}
 
-	if(head(lst) <= pivot) {
+	if(head(lst) < pivot) {
 		acc = concat([head(lst)],smaller(pivot, tail(lst)));
 	}else{
 		acc= concat([], smaller(pivot, tail(lst),acc));
 	}
 
 	return acc;
-} 
+}
 
 function bigger(pivot, lst){
 	var acc;
@@ -38,7 +39,6 @@ function qs(lst) {
 		return [];
 	}
 
-	lst=tail(lst);
 	var s=smaller(pivot,lst);
 	var b=bigger(pivot,lst);
 
@@ -46,50 +46,13 @@ function qs(lst) {
 	var r2=qs(b);
 	var r=concat(r1,[pivot]);
 	r=concat(r,r2);
-	return r; 
+	return r;
 
 }
-
-retorno=qs([0, 5, 4, 6, 6, 0, 4, 9, 4]);
-
-
-/*var cpf= [0, 5, 4, 6, 6, 0, 4, 9, 4];
-
-
-function gerador(lst){
-	
-	var lst1=lst;
-	var lst2=lst;
-	var s=0;
-
-	for(i=10; i>1; i=i-1){
-		s=s+(i*head(lst1));
-		lst=tail(lst1);
-	}
-
-	var r1=(s*10)%11;
-	if (r1==10){
-		r1=0;
-	}
-
-	s=0;
-	for(i=11; i>3; i=i-1){
-		s=s+(i*head(lst2));
-		lst=tail(lst2);
-	}
-
-	s=s+(r1*2);
-
-	var r2= (s*10)%11;
-
-	return ;
-	//return lst;
-}
-
-
-dig=gerador(cpf);
-
-/*var array1 = [100, 5, 7, 50, 34, 60, 16];
+var array1 = [100, 5, 7, 50, 34, 60, 16];
+retorno=qs(array1);
+*/
+/*
 
 
 
@@ -110,7 +73,7 @@ function smaller(pivot, lst) {
 	}
 
 	return acc;
-} 
+}
 
 function bigger(pivot, lst){
 	var acc;
@@ -142,7 +105,7 @@ function qs(lst) {
 	var r2=qs(b);
 	var r=concat(r1,[pivot]);
 	r=concat(r,r2);
-	return r; 
+	return r;
 
 }
 
@@ -186,7 +149,7 @@ v=concat([], []);
 
 for(var i = 0; i < 10; i++) {
 	var c = 20;
-	
+
 	for(j=0; j<10; j=j+1){
 
 		if(j== 2) {
@@ -223,7 +186,7 @@ function foo(x,b) {
 	var a=100;
 	if(q==8){
 		var v;
-		
+
 		leel=b;
 
 		if(a==100){
@@ -282,14 +245,14 @@ function foo(x,b) {
 		}
 	}
 
-	
+
 	function foo2(a){
 		haha=3;
 		return a;
 	}
 
-	
-	
+
+
 	return foo2(3);
 	var d=2;
 }

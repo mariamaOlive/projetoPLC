@@ -27,7 +27,7 @@ instance Show Value where
   show Nil = "nil"
   show (Func args cmds) = "func"
   show Break = "show Break"
-  show (Return v) = "show Return"
+  show (Return v) = "Return: " ++ show v
   show (Array []) = "[]"
   show (Array values) = "[" ++ showListContents values ++ "]"
   show (Native f) = "native function"
