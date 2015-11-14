@@ -100,7 +100,7 @@ evalExpr env (UnaryAssignExpr PostfixDec (LVar var)) = ST(\s ->
         (v, newS) = f s
     in case v of
         (Int val) -> let
-                        (ST g)= setVar var (Int (val + 1))
+                        (ST g)= setVar var (Int (val - 1))
                         (v2, newS2) = g newS
                         in (v, newS2)
         _ -> (Error "Return value is not valid", s) --devo realmente retornar s?
