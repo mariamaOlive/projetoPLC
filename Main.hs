@@ -229,7 +229,7 @@ evalStmt env (ReturnStmt expr) = do
 evalStmt env (BlockStmt (stmt:sx))= do
     v<- (evalStmt env stmt)
     case v of
-        (Break) -> return Break
+        (Break) -> return Nill
         (Return x) -> return (Return x)
         (_) -> evalStmt env (BlockStmt sx)
 evalStmt env (BlockStmt []) = return Nil
